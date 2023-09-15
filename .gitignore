@@ -1,6 +1,32 @@
 # managed directories that are checked out by the externals tool
 cime/
-components/
+components/cice
+components/cism
+components/clm
+components/mosart
+components/pop
+components/rtm
+components/ww3
+
+components/cam/bld
+components/cam/chem_proc
+components/cam/cime_config
+components/cam/doc
+components/cam/test
+components/cam/tools
+
+*.svn-base
+*.xml
+*.inp
+*.f
+*.mod
+*.in
+*.ncl
+*.PP
+*.db*
+*.h
+*.doc
+*.c
 
 # generated local files
 *.log
