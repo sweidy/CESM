@@ -2394,4 +2394,77 @@ subroutine phys_timestep_init(phys_state, cam_in, cam_out, pbuf2d)
 
 end subroutine phys_timestep_init
 
+!============================================================================================
+!===   subroutine "read_netcdf_FL" to read variables from Netcdf file : added F.lamraoui ====
+!============================================================================================
+
+subroutine read_netcdf_FL(fileName, varname, field)
+   use netcdf
+   implicit none
+      character(*),intent(in)          :: fileName
+      character (len=*),intent(in)     :: varname                    ! variable name  in netcdf 
+     real(r8), allocatable, dimension(:,:,:,:) , intent(out) ::  field  
+     real(r8), allocatable,dimension(:) :: time, lev, lat, lon
+ !-- local 
+        integer  :: fid    ! netcdf file id
+        integer :: i, j, varid, numDims
+   !     integer, allocatable :: start_arr(:), count_arr(:)
+        integer ::    status  ! status output from netcdf routines
+        integer ::    ndim, nvar! sizes of netcdf file
+        integer :: dimID_TIME, dimID_DEPTH, dimID_LAT, dimID_LON, &
+ &          mTIME, mDEPTH, mLAT, mLON, TIME_ID, DEPTH_ID, LAT_ID, LON_ID,&
+ &          TEMP_ID, fidM
+ 
+    status = nf90_open(fileName,nf90_nowrite,fid)
+  
+ !- read ID of dimensions of interest and save them in
+ !  dimID_TIME, dimID_DEPTH, dimID_LAT, dimID_LON
+    print*,  'read ID of dimensions of interest and save them in '
+    status = NF90_INQ_DIMID(fid,"time",dimID_TIME)
+    status = NF90_INQ_DIMID(fid,"lev",dimID_DEPTH)
+    status = NF90_INQ_DIMID(fid,"lat",dimID_LAT)
+    status = NF90_INQ_DIMID(fid,"lon",dimID_LON)
+ 
+    print*,  'read values of dimensions and store in mTIME, mDEPTH, mLAT, mLON :'
+ !- read values of dimensions and store in mTIME, mDEPTH, mLAT, mLON :
+    status = NF90_INQUIRE_DIMENSION(fid,dimID_TIME,len=mTIME)
+    status = NF90_INQUIRE_DIMENSION(fid,dimID_DEPTH,len=mDEPTH)
+    status = NF90_INQUIRE_DIMENSION(fid,dimID_LAT,len=mLAT)
+    status = NF90_INQUIRE_DIMENSION(fid,dimID_LON,len=mLON)
+ 
+    print*,  '!- Allocation of arrays : '
+ !- Allocation of arrays :
+    ALLOCATE(  time(mTIME)  )
+    ALLOCATE(  lev(mDEPTH)  )
+    ALLOCATE(  lat(mLAT)  )
+    ALLOCATE(  lon(mLON)  )
+    ALLOCATE(  field(mLON,mLAT,mDEPTH,mTIME)  )
+ !- read ID of variables of interest and store them in xxxx_ID :
+    print*,  'read ID of variables of interest and store them in xxxx_ID : '
+    status = NF90_INQ_VARID(fid,"time",TIME_ID)
+    status = NF90_INQ_VARID(fid,"lev",DEPTH_ID)
+    status = NF90_INQ_VARID(fid,"lat",LAT_ID)
+    status = NF90_INQ_VARID(fid,"lat",LON_ID)
+    status = NF90_INQ_VARID(fid,varname,TEMP_ID)
+    print*,  '!- read and store values of each variable : '
+ !- read and store values of each variable :
+    status = NF90_GET_VAR(fid,TIME_ID,time)
+    status = NF90_GET_VAR(fid,DEPTH_ID,lev)
+    status = NF90_GET_VAR(fid,LAT_ID,lat)
+    status = NF90_GET_VAR(fid,LON_ID,lon)
+    status = NF90_GET_VAR(fid,TEMP_ID,field)
+ !----
+     print *, "from subroutine , shape(T) = ", shape(field)
+     print *, "from subroutine ,SIZE(T) = ", SIZE(field)
+ !!---Merra 0.9x1.25 shape(T) =  288 x 192 x  72 x  8
+    print *, " from subroutine , print  -------varname = ", varname
+    print*,  '!- close netcdf file : '
+ !- close netcdf file :
+    status = NF90_CLOSE(fid)
+  end subroutine read_netcdf_FL
+ !============================================================================================
+ !=== finish  subroutine "read_netcdf_FL" to read variables from Netcdf file : added F.lamraoui =
+ !============================================================================================
+ 
+
 end module physpkg
