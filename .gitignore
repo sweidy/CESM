@@ -14,6 +14,7 @@ components/cam/cime_config
 components/cam/doc
 components/cam/test
 components/cam/tools
+components/cam/src/dynamics/eul
 
 *.svn-base
 *.xml
