@@ -72,6 +72,12 @@ module physics_types
           u,       &! zonal wind (m/s)
           v,       &! meridional wind (m/s)
           s,       &! dry static energy
+          ! defining replay forcings - sweidman
+          sforce,  &! static energy difference
+          uforce,  &! zonal wind difference
+          vforce,  &! meridional wind difference
+          qforce,  &! first moment moisture difference
+          ! 
           omega,   &! vertical pressure velocity (Pa/s)
           pmid,    &! midpoint pressure (Pa)
           pmiddry, &! midpoint pressure dry (Pa)
