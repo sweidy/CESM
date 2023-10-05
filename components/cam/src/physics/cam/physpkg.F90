@@ -18,7 +18,7 @@ module physpkg
        physics_ptend, physics_tend_init, physics_update,    &
        physics_type_alloc, physics_ptend_dealloc,&
        physics_state_alloc, physics_state_dealloc, physics_tend_alloc, physics_tend_dealloc
-  use phys_grid,        only: get_ncols_p
+  use phys_grid,        only: get_ncols_p, get_lat_all_p,get_lon_all_p,get_rlat_all_p,get_lat_p,get_lon_p
   use phys_gmean,       only: gmean_mass
   use ppgrid,           only: begchunk, endchunk, pcols, pver, pverp, psubcols
   use constituents,     only: pcnst, cnst_name, cnst_get_ind
@@ -82,6 +82,91 @@ module physpkg
   integer ::  snow_sh_idx        = 0
   integer ::  dlfzm_idx          = 0     ! detrained convective cloud water mixing ratio.
 
+  integer ::  TEOUT_oldid        = 0 !(lat, lon) ; ! pbuf vars from cam.r. output - sweidman
+  integer ::  DTCORE_oldid  = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  CLDO_oldid         = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  PRER_EVAP_oldid    = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  CC_T_oldid         = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  CC_qv_oldid        = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  CC_ql_oldid        = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  CC_qi_oldid        = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  CC_nl_oldid        = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  CC_ni_oldid        = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  CC_qlst_oldid      = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  am_evp_st_oldid    = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  evprain_st_oldid   = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  evpsnow_st_oldid   = 0 !(pbuf_00032, lat, lon)
+  integer ::  ACPRECL_oldid      = 0 !(lat, lon) ;
+  integer ::  ACGCME_oldid       = 0 !(lat, lon) ;
+  integer ::  ACNUM_oldid        = 0 !(lat, lon) ;
+  integer ::  RELVAR_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  ACCRE_ENHAN_oldid  = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  pblh_oldid         = 0 !(lat, lon) ;
+  integer ::  tke_oldid          = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  kvh_oldid          = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  tpert_oldid        = 0 !(lat, lon) ;
+  integer ::  AST_oldid          = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  AIST_oldid         = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  ALST_oldid         = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  QIST_oldid         = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  QLST_oldid         = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  CONCLD_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  CLD_oldid          = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  RAD_CLUBB_oldid    = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  WP2_nadv_oldid     = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  WP3_nadv_oldid     = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  WPTHLP_nadv_oldid  = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  WPRTP_nadv_oldid   = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  RTPTHLP_nadv_oldid = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  RTP2_nadv_oldid    = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  THLP2_nadv_oldid   = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  UP2_nadv_oldid     = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  VP2_nadv_oldid     = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  UPWP_oldid         = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  VPWP_oldid         = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  THLM_oldid         = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  RTM_oldid          = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  UM_oldid           = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  VM_oldid           = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  DGNUM_oldid        = 0 !(pbuf_00128, lat, lon) ;
+  integer ::  DGNUMWET_oldid     = 0 !(pbuf_00128, lat, lon) ;
+  integer ::  num_c1_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  so4_c1_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  pom_c1_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  soa_c1_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  bc_c1_oldid        = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  dst_c1_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  ncl_c1_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  num_c2_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  so4_c2_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  soa_c2_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  ncl_c2_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  dst_c2_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  num_c3_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  dst_c3_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  ncl_c3_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  so4_c3_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  num_c4_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  pom_c4_oldid       = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  bc_c4_oldid        = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  DP_FLXPRC_oldid    = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  DP_FLXSNW_oldid    = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  DP_CLDLIQ_oldid    = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  DP_CLDICE_oldid    = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  cush_oldid         = 0 !(lat, lon) ;
+  integer ::  QRS_oldid          = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  QRL_oldid          = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  ICIWP_oldid        = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  ICLWP_oldid        = 0 !(pbuf_00032, lat, lon) ;
+  integer ::  kvm_oldid          = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  turbtype_oldid     = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  smaw_oldid         = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  tauresx_oldid      = 0 !(lat, lon) ;
+  integer ::  tauresy_oldid      = 0 !(lat, lon) ;
+  integer ::  qpert_oldid        = 0 !(pbuf_00033, lat, lon) ;
+  integer ::  T_TTEND_oldid      = 0 !(pbuf_00032, lat, lon) ;
+
+
 !=======================================================================
 contains
 !=======================================================================
@@ -98,7 +183,7 @@ contains
     !-----------------------------------------------------------------------
     use cam_abortutils,     only: endrun
     use physics_buffer,     only: pbuf_init_time
-    use physics_buffer,     only: pbuf_add_field, dtype_r8, pbuf_register_subcol
+    use physics_buffer,     only: pbuf_add_field, dtype_r8, pbuf_register_subcol, pbuf_times
     use shr_kind_mod,       only: r8 => shr_kind_r8
     use spmd_utils,         only: masterproc
     use constituents,       only: pcnst, cnst_add, cnst_chk_dim, cnst_name
@@ -188,6 +273,92 @@ contains
     call pbuf_add_field('QINI',      'physpkg', dtype_r8, (/pcols,pver/), qini_idx)
     call pbuf_add_field('CLDLIQINI', 'physpkg', dtype_r8, (/pcols,pver/), cldliqini_idx)
     call pbuf_add_field('CLDICEINI', 'physpkg', dtype_r8, (/pcols,pver/), cldiceini_idx)
+
+    print*,'pvers',pver,pverp ! add pbuf vars from cam.r. to buffer - sweidman
+    call pbuf_add_field('TEOUT_OLD', 'global', dtype_r8, (/pcols/), TEOUT_oldid) !(lat, lon) ; 
+    call pbuf_add_field('DTCORE_OLD', 'global', dtype_r8, (/pcols,pver/), DTCORE_oldid  ) !(pbuf_00032, lat, lon) ;
+    call pbuf_add_field('CLDO_OLD', 'global', dtype_r8, (/pcols,pver/),  CLDO_oldid         ) !(pbuf_00032, lat, lon) ;
+    call pbuf_add_field('PRER_EVAP_OLD', 'global', dtype_r8, (/pcols,pver/),  PRER_EVAP_oldid    ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('CC_T_OLD', 'global', dtype_r8, (/pcols,pver/),  CC_T_oldid         ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('CC_qv_OLD', 'global', dtype_r8, (/pcols,pver/),  CC_qv_oldid        ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('CC_ql_OLD', 'global', dtype_r8, (/pcols,pver/),  CC_ql_oldid        ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('CC_qi_OLD', 'global', dtype_r8, (/pcols,pver/),  CC_qi_oldid        ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('CC_nl_OLD', 'global', dtype_r8, (/pcols,pver/),  CC_nl_oldid        ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('CC_ni_OLD', 'global', dtype_r8, (/pcols,pver/),  CC_ni_oldid        ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('CC_qlst_OLD', 'global', dtype_r8, (/pcols,pver/),  CC_qlst_oldid      ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('am_evp_st_OLD', 'global', dtype_r8, (/pcols,pver/),  am_evp_st_oldid    ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('evprain_st_OLD', 'global', dtype_r8, (/pcols,pver/),  evprain_st_oldid   ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('evpsnow_st_OLD', 'global', dtype_r8, (/pcols,pver/),  evpsnow_st_oldid   ) !(pbuf_00032, lat, lon)
+  call pbuf_add_field('ACPRECL_OLD', 'global', dtype_r8, (/pcols/), ACPRECL_oldid      ) !(lat, lon) ;
+  call pbuf_add_field('ACGCME_OLD', 'global', dtype_r8, (/pcols/), ACGCME_oldid       ) !(lat, lon) ;
+  call pbuf_add_field('ACNUM_OLD', 'global', dtype_r8, (/pcols/), ACNUM_oldid        ) !(lat, lon) ;
+  call pbuf_add_field('RELVAR_OLD', 'global', dtype_r8, (/pcols,pver/),  RELVAR_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('ACCRE_ENHANT_OLD', 'global', dtype_r8, (/pcols,pver/),  ACCRE_ENHAN_oldid  ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('pblh_OLD', 'global', dtype_r8, (/pcols/), pblh_oldid         ) !(lat, lon) ;
+  call pbuf_add_field('tke_OLD', 'global', dtype_r8, (/pcols,pverp/),  tke_oldid          ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('kvh_OLD', 'global', dtype_r8, (/pcols,pverp/),  kvh_oldid          ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('tpert_OLD', 'global', dtype_r8, (/pcols/), tpert_oldid        ) !(lat, lon) ;
+  call pbuf_add_field('AST_OLD', 'global', dtype_r8, (/pcols,pver/),  AST_oldid          ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('AIST_OLD', 'global', dtype_r8, (/pcols,pver/),  AIST_oldid         ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('ALST_OLD', 'global', dtype_r8, (/pcols,pver/),  ALST_oldid         ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('QIST_OLD', 'global', dtype_r8, (/pcols,pver/),  QIST_oldid         ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('QLST_OLD', 'global', dtype_r8, (/pcols,pver/),  QLST_oldid         ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('CONCLD_OLD', 'global', dtype_r8, (/pcols,pver/),  CONCLD_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('CLD_OLD', 'global', dtype_r8, (/pcols,pver/),  CLD_oldid          ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('RAD_CLUBB_OLD', 'global', dtype_r8, (/pcols,pver/),  RAD_CLUBB_oldid    ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('WP2_nadv_OLD', 'global', dtype_r8, (/pcols,pverp/),  WP2_nadv_oldid     ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('WP3_nadv_OLD', 'global', dtype_r8, (/pcols,pverp/),  WP3_nadv_oldid     ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('WPTHLP_nadv_OLD', 'global', dtype_r8, (/pcols,pverp/),  WPTHLP_nadv_oldid  ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('WPRTP_nadv_OLD', 'global', dtype_r8, (/pcols,pverp/),  WPRTP_nadv_oldid   ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('RTPTHLP_nadv_OLD', 'global', dtype_r8, (/pcols,pverp/),  RTPTHLP_nadv_oldid ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('RTP2_nadv_OLD', 'global', dtype_r8, (/pcols,pverp/),  RTP2_nadv_oldid    ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('THLP2_nadv_OLD', 'global', dtype_r8, (/pcols,pverp/),  THLP2_nadv_oldid   ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('UP2_nadv_OLD', 'global', dtype_r8, (/pcols,pverp/),  UP2_nadv_oldid     ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('VP2_nadv_OLD', 'global', dtype_r8, (/pcols,pverp/),  VP2_nadv_oldid     ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('UPWP_OLD', 'global', dtype_r8, (/pcols,pverp/),  UPWP_oldid         ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('VPWP_OLD', 'global', dtype_r8, (/pcols,pverp/),  VPWP_oldid         ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('THLM_OLD', 'global', dtype_r8, (/pcols,pverp/),  THLM_oldid         ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('RTM_OLD', 'global', dtype_r8, (/pcols,pverp/),  RTM_oldid          ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('UM_OLD', 'global', dtype_r8, (/pcols,pverp/),  UM_oldid           ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('VM_OLD', 'global', dtype_r8, (/pcols,pverp/),  VM_oldid           ) !(pbuf_00033, lat, lon) ;
+  call rad_cnst_get_info(0, nmodes=nmodes)
+  call pbuf_add_field('DGNUM_OLD', 'global', dtype_r8, (/pcols,pverp,nmodes/),  DGNUM_oldid        ) !(pbuf_00128, lat, lon) ;
+  call pbuf_add_field('DGNUMWET_OLD', 'global', dtype_r8, (/pcols,pverp,nmodes/),  DGNUMWET_oldid     ) !(pbuf_00128, lat, lon) ;
+  call pbuf_add_field('num_c1_OLD', 'global', dtype_r8, (/pcols,pver/),  num_c1_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('so4_c1_OLD', 'global', dtype_r8, (/pcols,pver/),  so4_c1_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('pom_c1_OLD', 'global', dtype_r8, (/pcols,pver/),  pom_c1_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('soa_c1_OLD', 'global', dtype_r8, (/pcols,pver/),  soa_c1_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('bc_c1_OLD', 'global', dtype_r8, (/pcols,pver/),  bc_c1_oldid        ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('dst_c1_OLD', 'global', dtype_r8, (/pcols,pver/),  dst_c1_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('ncl_c1_OLD', 'global', dtype_r8, (/pcols,pver/),  ncl_c1_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('num_c2_OLD', 'global', dtype_r8, (/pcols,pver/),  num_c2_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('so4_c2_OLD', 'global', dtype_r8, (/pcols,pver/),  so4_c2_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('soa_c2_OLD', 'global', dtype_r8, (/pcols,pver/),  soa_c2_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('ncl_c2_OLD', 'global', dtype_r8, (/pcols,pver/),  ncl_c2_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('dst_c2_OLD', 'global', dtype_r8, (/pcols,pver/),  dst_c2_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('num_c3_OLD', 'global', dtype_r8, (/pcols,pver/),  num_c3_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('dst_c3_OLD', 'global', dtype_r8, (/pcols,pver/),  dst_c3_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('ncl_c3_OLD', 'global', dtype_r8, (/pcols,pver/),  ncl_c3_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('so4_c3_OLD', 'global', dtype_r8, (/pcols,pver/),  so4_c3_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('num_c4_OLD', 'global', dtype_r8, (/pcols,pver/),  num_c4_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('pom_c4_OLD', 'global', dtype_r8, (/pcols,pver/),  pom_c4_oldid       ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('bc_c4_OLD', 'global', dtype_r8, (/pcols,pver/),  bc_c4_oldid        ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('DP_FLXPRC_OLD', 'global', dtype_r8, (/pcols,pverp/),  DP_FLXPRC_oldid    ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('DP_FLXSNW_OLD', 'global', dtype_r8, (/pcols,pverp/),  DP_FLXSNW_oldid    ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('DP_CLDLIQ_OLD', 'global', dtype_r8, (/pcols,pver/),  DP_CLDLIQ_oldid    ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('DP_CLDICE_OLD', 'global', dtype_r8, (/pcols,pver/),  DP_CLDICE_oldid    ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('cush_OLD', 'global', dtype_r8, (/pcols/), cush_oldid         ) !(lat, lon) ;
+  call pbuf_add_field('QRS_OLD', 'global', dtype_r8, (/pcols,pver/),  QRS_oldid          ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('QRL_OLD', 'global', dtype_r8, (/pcols,pver/),  QRL_oldid          ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('ICIWP_OLD', 'global', dtype_r8, (/pcols,pver/),  ICIWP_oldid        ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('ICLWP_OLD', 'global', dtype_r8, (/pcols,pver/),  ICLWP_oldid        ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('kvm_OLD', 'global', dtype_r8, (/pcols,pverp/),  kvm_oldid          ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('turbtype_OLD', 'global', dtype_r8, (/pcols,pverp/),  turbtype_oldid     ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('smaw_OLD', 'global', dtype_r8, (/pcols,pverp/),  smaw_oldid         ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('tauresx_OLD', 'global', dtype_r8, (/pcols/), tauresx_oldid      ) !(lat, lon) ;
+  call pbuf_add_field('tauresy_OLD', 'global', dtype_r8, (/pcols/), tauresy_oldid      ) !(lat, lon) ;
+  call pbuf_add_field('qpert_OLD', 'global', dtype_r8, (/pcols,pverp/),  qpert_oldid        ) !(pbuf_00033, lat, lon) ;
+  call pbuf_add_field('T_TTEND_OLD', 'global', dtype_r8, (/pcols,pver/),  T_TTEND_oldid      ) !(pbuf_00032, lat, lon) ; 
 
     ! check energy package
     call check_energy_register
@@ -1084,7 +1255,7 @@ contains
     !-----------------------------------------------------------------------
     use physics_buffer,  only: physics_buffer_desc, pbuf_get_chunk, pbuf_deallocate, pbuf_update_tim_idx
     use mo_lightning,    only: lightning_no_prod
-    use cam_diagnostics, only: diag_deallocate, diag_surf
+    use cam_diagnostics, only: diag_deallocate, diag_surf, diag_phys_writeout
     use physconst,       only: stebol, latvap
     use carma_intr,      only: carma_accumulate_stats
     use spmd_utils,      only: mpicom
@@ -1138,6 +1309,16 @@ contains
     call t_adj_detailf(+1)
 
 !$OMP PARALLEL DO PRIVATE (C, NCOL, phys_buffer_chunk)
+
+    call replay_correction(phys_state,phys_tend,ztodt) ! call replay function - sweidman
+    
+    do c=begchunk,endchunk
+       ncol = get_ncols_p(c)
+       phys_buffer_chunk => pbuf_get_chunk(pbuf2d, c)
+       call diag_phys_writeout(phys_state(c))
+
+    end do
+    ! end added
 
     do c=begchunk,endchunk
        ncol = get_ncols_p(c)
@@ -2456,7 +2637,6 @@ subroutine read_netcdf_FL(fileName, varname, field)
  !----
      print *, "from subroutine , shape(T) = ", shape(field)
      print *, "from subroutine ,SIZE(T) = ", SIZE(field)
- !!---Merra 0.9x1.25 shape(T) =  288 x 192 x  72 x  8
     print *, " from subroutine , print  -------varname = ", varname
     print*,  '!- close netcdf file : '
  !- close netcdf file :
@@ -2465,6 +2645,347 @@ subroutine read_netcdf_FL(fileName, varname, field)
  !============================================================================================
  !=== finish  subroutine "read_netcdf_FL" to read variables from Netcdf file : added F.lamraoui =
  !============================================================================================
- 
+
+
+  subroutine replay_correction (state,tend,ztodt)
+
+   !----------------------------------------------------------------------- 
+   ! Purpose: 
+   !-----------------------------------------------------------------------
+       use physics_buffer, only : pbuf_get_index, pbuf_get_field,physics_buffer_desc, pbuf_set_field, pbuf_times, pbuf_add_field, dtype_r8, pbuf_get_index, pbuf_old_tim_idx
+         use rgrid,        only: nlon
+         use phys_grid,    only:  gather_chunk_to_field, scatter_field_to_chunk
+         use dyn_grid,     only: get_horiz_grid_dim_d
+         use time_manager, only: get_nstep, get_curr_date
+         use geopotential, only: geopotential_dse
+         use physconst,    only: zvir, gravit, cpairv, rair,cpair
+         use phys_control, only: phys_getopts
+         use cam_pio_utils,    only: cam_pio_openfile, get_decomp, get_phys_decomp, phys_decomp
+         use pio,          only: pio_write_darray, pio_read_darray, file_desc_t, var_desc_t, io_desc_t, pio_offset, pio_setframe, pio_double, pio_write, pio_nowrite, pio_inq_varid, pio_def_var, pio_closefile
+         use pio_types, only : file_desc_t, var_desc_t, io_desc_t
+       use ioFileMod,     only: getfil
+       use cam_history,    only: addfld, outfld
+      use shr_mem_mod,       only: shr_mem_init, shr_mem_getusage
+       use pmgrid,          only: plon, plat 
+   
+      real(r8) :: qtarget_c(pcols,begchunk:endchunk,pver)
+      real(r8) :: utarget_c(pcols,begchunk:endchunk,pver)
+      real(r8) :: vtarget_c(pcols,begchunk:endchunk,pver)
+      real(r8) :: starget_c(pcols,begchunk:endchunk,pver)
+      real(r8) :: ttarget_c(pcols,begchunk:endchunk,pver)
+   
+      real(r8) :: qforcing(pcols,begchunk:endchunk,pver)
+      real(r8) :: uforcing(pcols,begchunk:endchunk,pver)
+      real(r8) :: vforcing(pcols,begchunk:endchunk,pver)
+      real(r8) :: sforcing(pcols,begchunk:endchunk,pver)
+   
+    
+      integer, save :: nstep_count
+   
+   
+   
+   !      use cam_control_mod, only: sst_option
+   ! Arguments
+         type(physics_state), intent(inout) :: state(begchunk:endchunk)
+         type(physics_tend), intent(inout) :: tend(begchunk:endchunk)
+         real(r8) , intent(in) :: ztodt
+   ! Local workspace
+         type(physics_ptend)   :: ptend                  ! indivdualparameterization tendencies
+         real(r8) ::     arrq(pcols,begchunk:endchunk,pver),arrt(pcols,begchunk:endchunk,pver),arru(pcols,begchunk:endchunk,pver),arrv(pcols,begchunk:endchunk,pver)       ! Input array,chunked
+         real(r8) :: zmean                        ! temporary zonal mean value
+         integer :: i, j, qconst, ifld,n ,ilat,ilon                 ! longitude, latitude,field, and global column indices
+         integer :: hdim1, hdim2, c, ncols, k, istep, modstep
+         real(r8) ::rlat(pcols),damping_coef,wrk,forcingtime,dampingtime!,tmprand(128,64)
+         real :: tmp_zero
+         integer :: ilat_all(pcols)
+         integer :: ndays, day, mon, yr, ncsec
+         integer :: modstep6hr, modstep3hr
+         logical :: fileexists
+         logical,save :: corrector_step, started   
+   !----- 
+
+         integer :: ierr,csize                          !!Added  
+       integer jerr
+       character(len=256) :: ncdata_loc,filen,ncwrite_loc,outn
+   integer :: dims2d(2)
+   integer :: resul,lchnk
+        real(r8), pointer :: londeg(:,:)
+        type(file_desc_t) :: File
+   
+      !---------------------------flamraoui 2------------------------------
+     ! variable for reading netcdf 
+       character(len=256)        :: fileName
+   
+       real(r8),allocatable,  dimension(:,:,:) ::  Sfield3d
+       real(r8),allocatable,  dimension(:,:,:) ::  Tfield3d
+       real(r8),allocatable,  dimension(:,:,:) ::  Qfield3d
+       real(r8),allocatable,  dimension(:,:,:) ::  Ufield3d
+       real(r8),allocatable,  dimension(:,:,:) ::  Vfield3d
+       real(r8),allocatable,  dimension(:,:,:) ::  Zfield3d
+   
+   integer, dimension(11) :: monarray
+   
+   real(r8), allocatable :: tmpfield(:)
+        type(io_desc_t), pointer :: iodesc
+        type(var_desc_t) :: vardesc
+   real(r8) :: msize,mrss
+   
+     !---------------------------flamraoui------------------------------
+     
+       istep=get_nstep()
+      nstep_count=istep
+   
+   !On first time step, make sure we're starting a "clean" run
+   
+   if (nstep_count==0 .AND. started .ne. .TRUE.) then
+       started=.TRUE.
+       corrector_step=.FALSE.
+       
+       #if ( defined SPMD )
+           do c = begchunk, endchunk
+               call get_rlat_all_p(c,pcols,rlat)
+               call get_lat_all_p(c,pcols,ilat_all)
+               rlat=rlat*180._r8/3.14159
+               ncols = get_ncols_p(c)
+               do i = 1, ncols
+                   do k=1,pver
+                       state(c)%qforce(i,k) = 0.0
+                       state(c)%uforce(i,k) = 0.0
+                       state(c)%vforce(i,k) = 0.0
+                       state(c)%sforce(i,k) = 0.0
+                   end do
+               end do
+           end do
+           #endif
+   endif
+   
+   !then figure out what day it is
+   
+     !---------------------------flamraoui------------------------------
+        ndays = 1+ istep/48     !  number of days based on istep
+   !------------------------------------------------     
+   
+         call get_curr_date(yr, mon, day, ncsec)
+   
+   yr=max(yr,1980)
+   
+   
+   if (masterproc) then
+   print*,  'iyear = ', yr
+   print*,  'imonth = ', mon
+   print*,  'iday = ', day
+      print*, "step count from the beginning", nstep_count
+   endif
+   
+   !define constants
+       forcingtime=1._r8*21600._r8       ! six hours in seconds
+   
+   
+       call get_horiz_grid_dim_d(hdim1, hdim2)
+   
+   
+   modstep=int((mod(istep+6, 48)) / 6)
+   modstep6hr=  (mod(istep, 12)) 
+   modstep3hr=  (mod(istep, 6)) 
+   
+   fileexists=.FALSE.
+   
+   do while (.NOT. fileexists )
+   
+   !-------------------------------------------------------------------------------------
+   !-----------------------------determine filename--------------------------------------
+      if (mon<10) then
+          if (day<10) then
+              write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart_",I4,"0", I1,"0",I1,"_",I1,".nc")' ) yr,mon, day,modstep
+          else 
+              write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart_",I4,"0", I1,I2,"_",I1,".nc")' ) yr,mon, day, modstep
+          endif 
+       else   
+          if (day<10) then
+              write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart_",I4,I2,"0",I1,"_",I1,".nc")' ) yr,mon, day, modstep
+          else 
+              write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart_",I4, I2,I2,"_",I1,".nc")' ) yr,mon, day, modstep
+          endif 
+       endif  
+   
+   INQUIRE(FILE=filename, EXIST=fileexists)
+   
+   if (.not. fileexists) print*, 'file missing', filename
+   
+   day=day-1
+   if (day==0) then
+   day=31
+   mon=mon-1
+   if (mon==0) then
+   mon=12
+   yr=yr-1
+   end if
+   end if
+   
+   end do
+   
+   !-------------------------------------------------------------------------------------
+   if (masterproc) print*, "Reanalysis filename = ", filename    ! print filename used 
+   !-----------------------------finish calling filename--------------------------------------  
+   
+   
+   
+   
+     !------------------------------------------
+      
+      
+   !goals at end of "corrector" run
+   !a) reset forcing to zero
+   !b) set flag to false 
+      
+      if (modstep6hr == 11 ) then
+   !       if (corrector_step) then
+              #if ( defined SPMD )
+              do c = begchunk, endchunk
+                  call get_rlat_all_p(c,pcols,rlat)
+                  call get_lat_all_p(c,pcols,ilat_all)
+                  rlat=rlat*180._r8/3.14159
+                  ncols = get_ncols_p(c)
+                  do i = 1, ncols
+                      do k=1,pver
+                           state(c)%qforce(i,k) = 0.0
+                           state(c)%uforce(i,k) = 0.0
+                           state(c)%vforce(i,k) = 0.0
+                           state(c)%sforce(i,k) = 0.0 
+                      end do
+                  end do
+              end do
+              #endif
+   !       a) wipe the forcing to zero
+              corrector_step=.FALSE.
+   
+       endif
+     !      set corrector_step is false
+        !
+       
+        
+   
+   
+   if (masterproc) then
+   print*, "modstep", modstep    ! timestep during the day 
+   print*, "modstep6hr", modstep6hr  ! reset to zero every 6 hrs 
+   print*, "modstep3hr", modstep3hr  ! reset to zero every 3 hrs
+   print*, "corrector_step", corrector_step
+   print*, state(begchunk)%sforce(1,1)
+   endif
+   
+   
+   !
+   !if in "corrector" step: divide difference by 6h to get tendency and apply it to physics
+   !
+   if (corrector_step) then
+   #if ( defined SPMD )
+   do c = begchunk, endchunk
+          call physics_ptend_init(ptend)
+
+          ncols = get_ncols_p(c)
+   !  print *, "=========doloop ====>  ncols= ", ncols
+   do i = 1, ncols
+   do k=1,pver   
+   
+       ptend%q(i,k,1) = ptend%q(i,k,1) + state(c)%qforce(i,k)/forcingtime
+       ptend%u(i,k) = ptend%u(i,k) + state(c)%uforce(i,k) /forcingtime
+       ptend%v(i,k) = ptend%v(i,k) + state(c)%vforce(i,k) /forcingtime
+       ptend%s(i,k) = ptend%s(i,k) + state(c)%sforce(i,k)/forcingtime
+   
+   !print *, "=====after forcing ===doloopcik=ptend%q(i,k,1) = ", ptend%q(i,k,1)
+   !print *, "=====after forcing ===doloopcik=ptend%u(i,k,1) = ", ptend%u(i,k)
+   !
+   end do
+   end do
+   !print *, "=====after forcing ===doloopcik=ptend%s(i,k,1) = ", ptend%s(1,1)
+   !print *, "ptendusize",size(ptend%u)
+   !apply tendencies to model
+       ptend%lq(1) = .true.
+       ptend%lu = .true.
+       ptend%lv = .true.
+       ptend%ls = .true.
+       call physics_update (state(c), tend(c), ptend, ztodt)
+   end do
+   #endif
+   endif
+   
+   
+   !goals at end of "clean" run
+   ! a) reading merra target
+   ! b) define forcing to be difference with the state divided by 6hrs 
+   ! c) write (save) it to disk 
+   ! d) set corrector_step to true 
+   ! e) reset clock and restart states (not here)
+   
+       if  (modstep6hr==5 .AND. .NOT. corrector_step ) then
+   
+      call cam_pio_openfile(File, trim(filename), 0)
+        csize=endchunk-begchunk+1
+   
+           allocate(tmpfield(pcols*csize*pver))
+           allocate(Tfield3d(pcols,pver,begchunk:endchunk))
+           allocate(Ufield3d(pcols,pver,begchunk:endchunk))
+           allocate(Vfield3d(pcols,pver,begchunk:endchunk))
+           allocate(Qfield3d(pcols,pver,begchunk:endchunk))
+           allocate(Zfield3d(pcols,pver,begchunk:endchunk))
+   
+           tmpfield(:)=0.0
+   
+           call get_phys_decomp(iodesc,1,pver,1,pio_double)
+   
+   
+           ierr = pio_inq_varid(File, "T", vardesc)
+           call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
+           call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
+           Tfield3d = reshape(tmpfield, (/pcols,pver, csize/))
+   
+           ierr = pio_inq_varid(File, "U", vardesc)
+           call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
+           call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
+           Ufield3d = reshape(tmpfield, (/pcols,pver, csize/))
+   
+           ierr = pio_inq_varid(File, "V", vardesc)
+           call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
+           call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
+           Vfield3d = reshape(tmpfield, (/pcols,pver, csize/))
+   
+           ierr = pio_inq_varid(File, "Q", vardesc)
+           call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
+           call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
+           Qfield3d = reshape(tmpfield, (/pcols,pver, csize/))
+   
+           ierr = pio_inq_varid(File, "Z3", vardesc)
+           call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
+           call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
+           Zfield3d(:,:,:) = reshape(tmpfield, (/pcols,pver, csize/))
+   
+      call pio_closefile(File)  
+   
+           do c = begchunk, endchunk
+               ncols = get_ncols_p(c)
+               do i = 1, ncols
+                   do k=1,pver
+                       state(c)%qforce(i,k)=((Qfield3d(i,k,c)-state(c)%q(i,k,1)))
+                       state(c)%uforce(i,k)=((Ufield3d(i,k,c)-state(c)%u(i,k)))
+                       state(c)%vforce(i,k)=((Vfield3d(i,k,c)-state(c)%v(i,k)))
+                       state(c)%sforce(i,k)=((Tfield3d(i,k,c)-state(c)%t(i,k)))*cpair
+                   end do
+               end do
+           end do
+   
+           deallocate(tmpfield)
+           deallocate(Tfield3d)
+           deallocate(Ufield3d)
+           deallocate(Vfield3d)
+           deallocate(Qfield3d)
+           deallocate(Zfield3d)
+   !writing happens in cam_diagnostics
+   
+           corrector_step=.TRUE.
+   
+   end if
+   
+   end subroutine replay_correction
 
 end module physpkg
