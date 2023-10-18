@@ -1,6 +1,24 @@
 # managed directories that are checked out by the externals tool
-cime/
-components/cice
+cime/.github
+cime/doc
+cime/scripts
+cime/config
+cime/tools
+cime/utils
+cime/src/build_scripts
+cime/src/CMake
+cime/src/components
+cime/src/externals
+cime/src/drivers/mct/cime_config
+cime/src/drivers/mct/unit_test
+cime/src/share/include
+cime/src/share/RandNum
+cime/src/share/streams
+cime/src/share/test
+cime/src/share/timing
+cime/src/share/unit_test_stubs
+cime/src/share/util
+
 components/cism
 components/clm
 components/mosart
@@ -15,6 +33,10 @@ components/cam/doc
 components/cam/test
 components/cam/tools
 components/cam/src/dynamics/eul
+
+components/cice/bld
+components/cice/cime_config
+components/cice/docs
 
 *.svn-base
 *.xml

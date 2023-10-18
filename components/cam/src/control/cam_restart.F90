@@ -35,7 +35,7 @@ subroutine cam_read_restart(cam_in, cam_out, dyn_in, dyn_out, pbuf2d, &
    use cam_initfiles,    only: initial_file_get_id
    use restart_dynamics, only: read_restart_dynamics
    use restart_physics,  only: read_restart_physics
-   use camsrfexch,       only: atm2hub_alloc, hub2atm_alloc
+   use camsrfexch,       only: atm2hub_alloc, hub2atm_alloc, atm2hub_deallocate
    use cam_history,      only: read_restart_history
    use cam_pio_utils,    only: clean_iodesc_list
 
@@ -47,6 +47,7 @@ subroutine cam_read_restart(cam_in, cam_out, dyn_in, dyn_out, pbuf2d, &
    type(physics_buffer_desc), pointer       :: pbuf2d(:,:)
    integer,                   intent(in)    :: stop_ymd       ! Stop date (YYYYMMDD)
    integer,                   intent(in)    :: stop_tod       ! Stop time of day (sec)
+!   character(len=*), optional, intent(IN)  :: passed_loc
 
    ! Local workspace
    type(file_desc_t), pointer :: fh_ini
