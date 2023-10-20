@@ -670,10 +670,6 @@ subroutine spmdinit_dyn(jord, grid)
       deallocate(cut)
    end if
 
-   if ( allocated(zdistq)) then
-      deallocate(zdistq)
-   end if
-
    if ( allocated(lonrangexy)) then
       deallocate(lonrangexy)
    end if
