@@ -486,6 +486,7 @@ subroutine dyn_init(dyn_in, dyn_out)
    use constituents,    only: pcnst, cnst_name, cnst_longname, tottnam, cnst_get_ind
    use cam_history,     only: addfld, add_default, horiz_only
    use phys_control,    only: phys_getopts
+   use dynamics_vars,   only: dynamics_clean ! added - sweidman
 
 #if ( defined OFFLINE_DYN )
    use metdata,         only: metdata_dyn_init
@@ -537,7 +538,9 @@ subroutine dyn_init(dyn_in, dyn_out)
    constants%cappa = rair/cpair
    constants%zvir  = zvir
 
-   call dyn_final(nlfilename, dyn_state, dyn_in, dyn_out) ! added - sweidman
+   call dynamics_clean    ( dyn_state%grid  ) ! added - sweidman so nlfilename not required
+   call dyn_free_interface( dyn_in, dyn_out )
+   ! call dyn_final(nlfilename, dyn_state, dyn_in, dyn_out) ! added - sweidman
 
    dt = get_step_size()
    dyn_state%dt        = dt         ! Should this be part of state??
