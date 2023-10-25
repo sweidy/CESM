@@ -1315,7 +1315,7 @@ contains
     do c=begchunk,endchunk
        ncol = get_ncols_p(c)
        phys_buffer_chunk => pbuf_get_chunk(pbuf2d, c)
-       call diag_phys_writeout(phys_state(c))
+       call diag_phys_writeout(phys_state(c), phys_buffer_chunk) ! pbuf not optional. 
 
     end do
     ! end added
@@ -2907,7 +2907,8 @@ subroutine read_netcdf_FL(fileName, varname, field)
        ptend%lu = .true.
        ptend%lv = .true.
        ptend%ls = .true.
-       call physics_update (state(c), tend(c), ptend, ztodt)
+       call physics_update (state(c), ptend, ztodt, tend(c))
+       ! call physics_update(state, ptend, ztodt, tend) - changed order in CESM2
    end do
    #endif
    endif
