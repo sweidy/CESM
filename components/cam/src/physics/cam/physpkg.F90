@@ -183,7 +183,7 @@ contains
     !-----------------------------------------------------------------------
     use cam_abortutils,     only: endrun
     use physics_buffer,     only: pbuf_init_time
-    use physics_buffer,     only: pbuf_add_field, dtype_r8, pbuf_register_subcol, pbuf_times
+    use physics_buffer,     only: pbuf_add_field, dtype_r8, pbuf_register_subcol 
     use shr_kind_mod,       only: r8 => shr_kind_r8
     use spmd_utils,         only: masterproc
     use constituents,       only: pcnst, cnst_add, cnst_chk_dim, cnst_name
@@ -2652,15 +2652,15 @@ subroutine read_netcdf_FL(fileName, varname, field)
    !----------------------------------------------------------------------- 
    ! Purpose: 
    !-----------------------------------------------------------------------
-       use physics_buffer, only : pbuf_get_index, pbuf_get_field,physics_buffer_desc, pbuf_set_field, pbuf_times, pbuf_add_field, dtype_r8, pbuf_get_index, pbuf_old_tim_idx
-         use rgrid,        only: nlon
+       use physics_buffer, only : pbuf_get_index, pbuf_get_field,physics_buffer_desc, pbuf_set_field, pbuf_add_field, dtype_r8, pbuf_get_index, pbuf_old_tim_idx
          use phys_grid,    only:  gather_chunk_to_field, scatter_field_to_chunk
          use dyn_grid,     only: get_horiz_grid_dim_d
          use time_manager, only: get_nstep, get_curr_date
          use geopotential, only: geopotential_dse
          use physconst,    only: zvir, gravit, cpairv, rair,cpair
          use phys_control, only: phys_getopts
-         use cam_pio_utils,    only: cam_pio_openfile, get_decomp, get_phys_decomp, phys_decomp
+         use cam_pio_utils,    only: cam_pio_openfile, cam_pio_get_decomp ! sweid - replace with cam_pio_get_decomp ?
+         use cam_grid_support,   only: cam_grid_get_decomp, cam_grid_id, cam_grid_dimensions ! trying this? - sweid
          use pio,          only: pio_write_darray, pio_read_darray, file_desc_t, var_desc_t, io_desc_t, pio_offset, pio_setframe, pio_double, pio_write, pio_nowrite, pio_inq_varid, pio_def_var, pio_closefile
          use pio_types, only : file_desc_t, var_desc_t, io_desc_t
        use ioFileMod,     only: getfil
@@ -2727,12 +2727,14 @@ subroutine read_netcdf_FL(fileName, varname, field)
    
    real(r8), allocatable :: tmpfield(:)
         type(io_desc_t), pointer :: iodesc
+        integer                  :: dims(3), gdims(3), nhdims ! added - sweid
+        integer                  :: physgrid ! added - sweid
         type(var_desc_t) :: vardesc
    real(r8) :: msize,mrss
    
      !---------------------------flamraoui------------------------------
      
-       istep=get_nstep()
+      istep=get_nstep()
       nstep_count=istep
    
    !On first time step, make sure we're starting a "clean" run
@@ -2756,7 +2758,7 @@ subroutine read_netcdf_FL(fileName, varname, field)
                    end do
                end do
            end do
-           #endif
+       #endif
    endif
    
    !then figure out what day it is
@@ -2765,7 +2767,7 @@ subroutine read_netcdf_FL(fileName, varname, field)
         ndays = 1+ istep/48     !  number of days based on istep
    !------------------------------------------------     
    
-         call get_curr_date(yr, mon, day, ncsec)
+   call get_curr_date(yr, mon, day, ncsec)
    
    yr=max(yr,1980)
    
@@ -2922,6 +2924,8 @@ subroutine read_netcdf_FL(fileName, varname, field)
    
       call cam_pio_openfile(File, trim(filename), 0)
         csize=endchunk-begchunk+1
+        dims(1) = pcols
+        dims(2) = csize
    
            allocate(tmpfield(pcols*csize*pver))
            allocate(Tfield3d(pcols,pver,begchunk:endchunk))
@@ -2932,8 +2936,27 @@ subroutine read_netcdf_FL(fileName, varname, field)
    
            tmpfield(:)=0.0
    
-           call get_phys_decomp(iodesc,1,pver,1,pio_double)
-   
+           ! call get_phys_decomp(iodesc,1,pver,1,pio_double)
+           ! same as get_phys_decomp_mdnd(iodesc, fdim, mdim, ldim, dtype, fileorder_in, column)
+           
+           ! replace with cam_pio_get_decomp(iodesc, ldims, fdims, dtype, map, field_dist_in, file_dist_in, permute)
+           ! example: call cam_pio_get_decomp(iodesc, ldims, fdims, pio_double, this%map) l:local,f:file
+            ! cam_grid_support might be helpful?
+           ! fdims: shape of field in netcdf     
+
+            ! from restart_physics? 
+            physgrid = cam_grid_id('physgrid')
+
+            call cam_grid_dimensions(physgrid, gdims(1:2))
+
+            if (gdims(2) == 1) then
+               nhdims = 1
+            else
+               nhdims = 2
+            end if
+            call cam_grid_get_decomp(physgrid, dims(1:2), gdims(1:nhdims), pio_double, &
+               iodesc)
+            ! maybe?
    
            ierr = pio_inq_varid(File, "T", vardesc)
            call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
