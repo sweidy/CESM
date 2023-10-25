@@ -82,6 +82,7 @@ public :: &
    dyn_init,     &
    dyn_run,      &
    dyn_final,    &
+   dyn_free_interface, & ! added as standalone sub module, sweid
    dyn_import_t, &
    dyn_export_t, &
    dyn_state,    &
@@ -2860,11 +2861,13 @@ subroutine dyn_final(restart_file, dyn_state, dyn_in, dyn_out)
    call dynamics_clean    ( dyn_state%grid  )
    call dyn_free_interface( dyn_in, dyn_out )
 
-   !=============================================================================================
-   contains
-   !=============================================================================================
+end subroutine dyn_final
 
-   subroutine dyn_free_interface ( dyn_in, dyn_out )
+!   !=============================================================================================
+!   contains
+!   !=============================================================================================
+
+subroutine dyn_free_interface ( dyn_in, dyn_out ) ! added as a standalone module - sweid
 
       ! free the dynamics import and export
 
@@ -2929,9 +2932,7 @@ subroutine dyn_final(restart_file, dyn_state, dyn_in, dyn_out)
       if ( associated(dyn_out%old_mfx) )  deallocate( dyn_out%old_mfx )
       if ( associated(dyn_out%old_mfy) )  deallocate( dyn_out%old_mfy )
 
-   end subroutine dyn_free_interface
-
-end subroutine dyn_final
+end subroutine dyn_free_interface
 
 !=============================================================================================
 ! Private routines

@@ -25,6 +25,7 @@ module atm_comp_mct
   use cam_comp,          only: cam_init, cam_run1, cam_run2, cam_run3, cam_run4, cam_final
   use cam_instance     , only: cam_instance_init, inst_suffix, inst_index
   use cam_control_mod  , only: initial_run, dart_mode, cam_ctrl_set_orbit
+  use constituents     , only: pcnst
   use radiation        , only: radiation_nextsw_cday
   use phys_grid        , only: get_ncols_p, ngcols, get_gcol_p, get_rlat_all_p, &
 	                       get_rlon_all_p, get_area_all_p

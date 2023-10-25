@@ -15,7 +15,7 @@ module physpkg
   use spmd_utils,       only: masterproc
   use physconst,        only: latvap, latice, rh2o
   use physics_types,    only: physics_state, physics_tend, physics_state_set_grid, &
-       physics_ptend, physics_tend_init, physics_update,    &
+       physics_ptend, physics_tend_init, physics_update, physics_ptend_init,   &
        physics_type_alloc, physics_ptend_dealloc,&
        physics_state_alloc, physics_state_dealloc, physics_tend_alloc, physics_tend_dealloc
   use phys_grid,        only: get_ncols_p, get_lat_all_p,get_lon_all_p,get_rlat_all_p,get_lat_p,get_lon_p
@@ -2883,7 +2883,7 @@ subroutine read_netcdf_FL(fileName, varname, field)
    if (corrector_step) then
    #if ( defined SPMD )
    do c = begchunk, endchunk
-          call physics_ptend_init(ptend)
+          call physics_ptend_init(ptend, state(c)%psetcols, ptend%name) ! has new required arguments in CESM2
 
           ncols = get_ncols_p(c)
    !  print *, "=========doloop ====>  ncols= ", ncols

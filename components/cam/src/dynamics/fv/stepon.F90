@@ -462,10 +462,10 @@ subroutine stepon_run3(dtime, cam_out, phys_state,             &
       call t_stopf('fv_out')
    endif
 
-   ifirstxy  =  grid%ifirstxy ! added - sweidman
-   ilastxy  =  grid%ilastxy
-   jfirstxy  =  grid%jfirstxy
-   jlastxy  =  grid%jlastxy
+   !ifirstxy  =  grid%ifirstxy ! added - sweidman -- this is giving error. needs explicit type. also not used?
+   !ilastxy  =  grid%ilastxy
+   !jfirstxy  =  grid%jfirstxy
+   !jlastxy  =  grid%jlastxy
 
    if (mod(ncsec,21600)==0 .and. .not. do_restart) then ! added all below - sweidman
 
