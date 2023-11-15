@@ -202,14 +202,20 @@ subroutine cam_init(EClock, &
 
    call phys_init( phys_state, phys_tend, pbuf2d,  cam_out )
 
+   if (masterproc) write(iulog,*) 'phys_init complete.'
+
    call bldfld ()       ! master field list (if branch, only does hash tables)
 
    call stepon_init(dyn_in, dyn_out)
+
+   if (masterproc) write(iulog,*) 'stepon_init complete.'
 
    call offline_driver_init()
 
    if (single_column) call scm_intht()
    call intht(model_doi_url)
+
+   if (masterproc) write(iulog,*) 'cam_init complete.'
 
 end subroutine cam_init
 

@@ -1069,6 +1069,8 @@ contains
     call tropopause_init()
     call dadadj_init()
 
+    if (masterproc) write(iulog,*) 'dadadj init complete.'
+
     prec_dp_idx  = pbuf_get_index('PREC_DP')
     snow_dp_idx  = pbuf_get_index('SNOW_DP')
     prec_sh_idx  = pbuf_get_index('PREC_SH')
@@ -1098,6 +1100,8 @@ contains
 
     ! Initialize qneg3 and qneg4
     call qneg_init()
+
+    if (masterproc) write(iulog,*) 'qneg init complete.'
 
   end subroutine phys_init
 
