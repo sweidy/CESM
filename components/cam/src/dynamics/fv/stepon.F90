@@ -105,6 +105,8 @@ subroutine stepon_init(dyn_in, dyn_out)
       enddo
    enddo
 
+   if (masterproc) write(iulog,*) 'grid stuff complete.'
+
    if ( nlres) then ! restart or branch run
       !
       ! read_restart_dynamics delivers phis, ps, u3s, v3s, delp, pt
@@ -149,6 +151,8 @@ subroutine stepon_init(dyn_in, dyn_out)
          enddo
    endif
 
+   if (masterproc) write(iulog,*) 'hopefully skipped this.'
+
    !----------------------------------------------------------
    ! Check total dry air mass; set to 982.22 mb if initial run
    ! Print out diagnostic message if restart run
@@ -159,7 +163,11 @@ subroutine stepon_init(dyn_in, dyn_out)
                     dyn_in%delp, dyn_in%pe, nlres )
    endif
 
+   if (masterproc) write(iulog,*) 'dry air mass complete.'
+
    if (grid%iam < grid%npes_xy) then
+
+      if (masterproc) write(iulog,*) 'starting allocate.'
 
       allocate( cappa3v(ifirstxy:ilastxy,jfirstxy:jlastxy,km) )
       allocate( cap3vi(ifirstxy:ilastxy,jfirstxy:jlastxy,km+1) )
@@ -192,6 +200,8 @@ subroutine stepon_init(dyn_in, dyn_out)
          enddo
       enddo
 
+      if (masterproc) write(iulog,*) 'high alt stuff complete.'
+
       ! Generate pkz, the conversion factor betw pt and t3
 
       call pkez(1,      im,   km,       jfirstxy,  jlastxy,              &
@@ -200,6 +210,8 @@ subroutine stepon_init(dyn_in, dyn_out)
 
       deallocate( cappa3v, cap3vi )
 
+      if (masterproc) write(iulog,*) 'pkez complete.'
+
    endif
 
    if (initial_run) then
@@ -207,6 +219,8 @@ subroutine stepon_init(dyn_in, dyn_out)
       ! Compute pt for initial run: scaled virtual potential temperature
       ! defined as (virtual temp deg K)/pkz. pt will be written to restart (SJL)
 
+
+      if (masterproc) write(iulog,*) 'pt initial run start.'
 !$omp parallel do private(i,j,k)
       do k = 1, km
          do j = jfirstxy, jlastxy
@@ -251,6 +265,8 @@ subroutine stepon_init(dyn_in, dyn_out)
          end if
       end do
       deallocate (delpdryxy)
+
+      if (masterproc) write(iulog,*) 'mixing ratios complete.'
       
    end if
 
