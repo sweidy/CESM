@@ -524,13 +524,16 @@ subroutine dyn_init(dyn_in, dyn_out)
    grid      => dyn_state%grid
    constants => dyn_state%constants
 
+   ! sweid - moved, also can try without
+   call dynamics_clean    ( dyn_state%grid  ) ! added - sweidman so nlfilename not required
+   call dyn_free_interface( dyn_in, dyn_out )
+
    if (grid%high_alt) then
       grid%ntotq = grid%ntotq + 1 ! advect Kappa
       grid%kthi = grid%kthi + 1
       grid%kthia(:) = grid%kthia(:) + 1
    endif
 
-   ! Set constants - TODO: this is below dyn_final, dt in CESM1 (sweidman)
    constants%pi    = pi
    constants%omega = omega
    constants%ae    = rearth
@@ -538,10 +541,6 @@ subroutine dyn_init(dyn_in, dyn_out)
    constants%cp    = cpair
    constants%cappa = rair/cpair
    constants%zvir  = zvir
-
-   call dynamics_clean    ( dyn_state%grid  ) ! added - sweidman so nlfilename not required
-   call dyn_free_interface( dyn_in, dyn_out )
-   ! call dyn_final(nlfilename, dyn_state, dyn_in, dyn_out) ! added - sweidman
 
    dt = get_step_size()
    dyn_state%dt        = dt         ! Should this be part of state??
@@ -703,6 +702,7 @@ subroutine dyn_init(dyn_in, dyn_out)
 if ( is_first ) then ! added - sweidman
    ! Setup circulation diagnostics
    call ctem_init()
+   write(iulog,*) ' is_first, set up circulation diagnostics'
 end if
 
    ! Diagnostics for AM

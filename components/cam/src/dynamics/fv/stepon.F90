@@ -141,6 +141,8 @@ subroutine stepon_init(dyn_in, dyn_out)
             enddo
          enddo
 
+         if (masterproc) write(iulog,*) 'generated pe.'
+
 !$omp parallel do private(i,j,k)
          do k = 1, km
             do j = jfirstxy, jlastxy
@@ -151,7 +153,7 @@ subroutine stepon_init(dyn_in, dyn_out)
          enddo
    endif
 
-   if (masterproc) write(iulog,*) 'hopefully skipped this.'
+   if (masterproc) write(iulog,*) 'generated delp.'
 
    !----------------------------------------------------------
    ! Check total dry air mass; set to 982.22 mb if initial run
