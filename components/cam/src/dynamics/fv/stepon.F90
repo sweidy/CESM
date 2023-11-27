@@ -136,8 +136,9 @@ subroutine stepon_init(dyn_in, dyn_out)
          do j = jfirstxy, jlastxy
             do k=1,km+1
                do i=ifirstxy, ilastxy
-                  if (i == ifirstxy) write(iulog,*) 'generating pe, dyn_in: ', dyn_in%ps(i,j)
                   dyn_in%pe(i,k,j) = ak(k) + bk(k) * dyn_in%ps(i,j)
+                  if (i == ifirstxy) write(iulog,*) 'generating pe, dyn_in: ', dyn_in%pe(i,k,j)
+                  if (i == iflastxy) write(iulog,*) 'generating pe, dyn_in: ', dyn_in%pe(i,k,j)
                enddo
             enddo
          enddo
