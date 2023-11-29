@@ -524,9 +524,9 @@ subroutine dyn_init(dyn_in, dyn_out)
    grid      => dyn_state%grid
    constants => dyn_state%constants
 
-   ! sweid - moved, also can try without
-   call dynamics_clean    ( dyn_state%grid  ) ! added - sweidman so nlfilename not required
-   call dyn_free_interface( dyn_in, dyn_out )
+   ! sweid - moved but I think it breaks regardless
+   !call dynamics_clean    ( dyn_state%grid  ) ! added - sweidman so nlfilename not required
+   !call dyn_free_interface( dyn_in, dyn_out )
 
    if (grid%high_alt) then
       grid%ntotq = grid%ntotq + 1 ! advect Kappa
@@ -702,7 +702,6 @@ subroutine dyn_init(dyn_in, dyn_out)
 if ( is_first ) then ! added - sweidman
    ! Setup circulation diagnostics
    call ctem_init()
-   write(iulog,*) ' is_first, set up circulation diagnostics'
 end if
 
    ! Diagnostics for AM
