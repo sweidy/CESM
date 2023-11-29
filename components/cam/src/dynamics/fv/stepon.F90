@@ -131,11 +131,17 @@ subroutine stepon_init(dyn_in, dyn_out)
    else
  
       ! Initial run --> generate pe and delp from the surface pressure
+
+      write(iulog,*) 'printing dims: ', jlastxy,km,ilastxy
  
 !$omp parallel do private(i,j,k)
          do j = jfirstxy, jlastxy
             do k=1,km+1
                do i=ifirstxy, ilastxy
+                  if (i == ifirstxy) write(iulog,*) 'generating pe, dyn_in: ', dyn_in%ps(i,k,j)
+                  if (i == ilastxy) write(iulog,*) 'generating pe, dyn_in: ', dyn_in%ps(i,k,j)
+                  if (i == ifirstxy) write(iulog,*) 'generating pe, dyn_in: ', dyn_in%pe(i,k,j)
+                  if (i == ilastxy) write(iulog,*) 'generating pe, dyn_in: ', dyn_in%pe(i,k,j)
                   dyn_in%pe(i,k,j) = ak(k) + bk(k) * dyn_in%ps(i,j)
                   if (i == ifirstxy) write(iulog,*) 'generating pe, dyn_in: ', dyn_in%pe(i,k,j)
                   if (i == ilastxy) write(iulog,*) 'generating pe, dyn_in: ', dyn_in%pe(i,k,j)
