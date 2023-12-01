@@ -2802,15 +2802,15 @@ subroutine read_netcdf_FL(fileName, varname, field)
    !-----------------------------determine filename--------------------------------------
       if (mon<10) then
           if (day<10) then
-              write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4,"0", I1,"0",I1,"_",I1,".nc")' ) yr,mon, day,modstep
+              write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4,"0", I1,"-0",I1,"_",I1,".nc")' ) yr,mon, day,modstep
           else 
-              write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4,"0", I1,I2,"_",I1,".nc")' ) yr,mon, day, modstep
+              write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4,"0", I1,"-",I2,"_",I1,".nc")' ) yr,mon, day, modstep
           endif 
        else   
           if (day<10) then
-              write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4,I2,"0",I1,"_",I1,".nc")' ) yr,mon, day, modstep
+              write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4,I2,"-0",I1,"_",I1,".nc")' ) yr,mon, day, modstep
           else 
-              write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4, I2,I2,"_",I1,".nc")' ) yr,mon, day, modstep
+              write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4, I2,"-",I2,"_",I1,".nc")' ) yr,mon, day, modstep
           endif 
        endif  
    
