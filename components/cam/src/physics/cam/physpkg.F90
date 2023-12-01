@@ -1314,7 +1314,9 @@ contains
 
 !$OMP PARALLEL DO PRIVATE (C, NCOL, phys_buffer_chunk)
 
+    if (masterproc) write(iulog,*) 'About to call replay_correction.'
     call replay_correction(phys_state,phys_tend,ztodt) ! call replay function - sweidman
+    if (masterproc) write(iulog,*) 'Finished replay_correction'
     
     do c=begchunk,endchunk
        ncol = get_ncols_p(c)
@@ -2725,7 +2727,7 @@ subroutine read_netcdf_FL(fileName, varname, field)
        real(r8),allocatable,  dimension(:,:,:) ::  Qfield3d
        real(r8),allocatable,  dimension(:,:,:) ::  Ufield3d
        real(r8),allocatable,  dimension(:,:,:) ::  Vfield3d
-       real(r8),allocatable,  dimension(:,:,:) ::  Zfield3d
+       !real(r8),allocatable,  dimension(:,:,:) ::  Zfield3d
    
    integer, dimension(11) :: monarray
    
@@ -2775,14 +2777,13 @@ subroutine read_netcdf_FL(fileName, varname, field)
    
    yr=max(yr,2011)
    
-   
    if (masterproc) then
-   print*,  'iyear = ', yr
-   print*,  'imonth = ', mon
-   print*,  'iday = ', day
-      print*, "step count from the beginning", nstep_count
+      write(iulog,*)  'iyear = ', yr
+      write(iulog,*)  'imonth = ', mon
+      write(iulog,*)  'iday = ', day
+      write(iulog,*) "step count from the beginning", nstep_count
    endif
-   
+
    !define constants
        forcingtime=1._r8*21600._r8       ! six hours in seconds
    
@@ -2829,9 +2830,9 @@ subroutine read_netcdf_FL(fileName, varname, field)
    end if
    
    end do
-   
+  
    !-------------------------------------------------------------------------------------
-   if (masterproc) print*, "Reanalysis filename = ", filename    ! print filename used 
+   if (masterproc) write(iulog,*) "Reanalysis filename = ", filename    ! print filename used 
    !-----------------------------finish calling filename--------------------------------------  
    
    
@@ -2937,7 +2938,7 @@ subroutine read_netcdf_FL(fileName, varname, field)
            allocate(Ufield3d(pcols,pver,begchunk:endchunk))
            allocate(Vfield3d(pcols,pver,begchunk:endchunk))
            allocate(Qfield3d(pcols,pver,begchunk:endchunk))
-           allocate(Zfield3d(pcols,pver,begchunk:endchunk))
+           !allocate(Zfield3d(pcols,pver,begchunk:endchunk))
    
            tmpfield(:)=0.0
    
@@ -2983,10 +2984,10 @@ subroutine read_netcdf_FL(fileName, varname, field)
            call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
            Qfield3d = reshape(tmpfield, (/pcols,pver, csize/))
    
-           ierr = pio_inq_varid(File, "Z3", vardesc)
-           call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
-           call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
-           Zfield3d(:,:,:) = reshape(tmpfield, (/pcols,pver, csize/))
+           !ierr = pio_inq_varid(File, "Z3", vardesc)
+           !call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
+           !call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
+           !Zfield3d(:,:,:) = reshape(tmpfield, (/pcols,pver, csize/))
    
       call pio_closefile(File)  
    
@@ -3007,7 +3008,7 @@ subroutine read_netcdf_FL(fileName, varname, field)
            deallocate(Ufield3d)
            deallocate(Vfield3d)
            deallocate(Qfield3d)
-           deallocate(Zfield3d)
+           !deallocate(Zfield3d)
    !writing happens in cam_diagnostics
    
            corrector_step=.TRUE.

@@ -294,10 +294,13 @@ subroutine cam_run2( cam_out, cam_in )
    !
    ! Second phase of physics (after surface model update)
    !
+   if (masterproc) write(iulog,*) 'Running phys_run2.'
    call t_barrierf ('sync_phys_run2', mpicom)
    call t_startf ('phys_run2')
    call phys_run2(phys_state, dtime_phys, phys_tend, pbuf2d,  cam_out, cam_in )
    call t_stopf  ('phys_run2')
+
+   if (masterproc) write(iulog,*) 'Ran phys_run2.'
 
    !
    ! Second phase of dynamics (at least couple from physics to dynamics)
