@@ -2888,6 +2888,8 @@ subroutine read_netcdf_FL(fileName, varname, field)
    if (corrector_step) then
    #if ( defined SPMD )
    do c = begchunk, endchunk
+      print*, "any ptend%lq? ", any(ptend%lq(:))
+      print*, "psetcols: ", state(c)%psetcols
           call physics_ptend_init(ptend, state(c)%psetcols, ptend%name) ! has new required arguments in CESM2
 
           ncols = get_ncols_p(c)
@@ -2989,7 +2991,9 @@ subroutine read_netcdf_FL(fileName, varname, field)
            !call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
            !Zfield3d(:,:,:) = reshape(tmpfield, (/pcols,pver, csize/))
    
-      call pio_closefile(File)  
+      call pio_closefile(File) 
+      write(iulog,*) "done read in reanalysis"
+      write(iulog,*) "state(c)%qforce(1,1): ", state(begchunk)%qforce(1,1)
    
            do c = begchunk, endchunk
                ncols = get_ncols_p(c)
@@ -3002,6 +3006,9 @@ subroutine read_netcdf_FL(fileName, varname, field)
                    end do
                end do
            end do
+
+           write(iulog,*) "done update state"
+           write(iulog,*) "state(c)%qforce(1,1): ", state(begchunk)%qforce(1,1)
    
            deallocate(tmpfield)
            deallocate(Tfield3d)
