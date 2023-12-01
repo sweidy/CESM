@@ -2888,9 +2888,14 @@ subroutine read_netcdf_FL(fileName, varname, field)
    if (corrector_step) then
    #if ( defined SPMD )
    do c = begchunk, endchunk
-      print*, "any ptend%lq? ", any(ptend%lq(:))
+      print*, "any ptend%lq? ", any(ptend%lq(:)) ! this gives false TODO
       print*, "psetcols: ", state(c)%psetcols
-          call physics_ptend_init(ptend, state(c)%psetcols, ptend%name) ! has new required arguments in CESM2
+          ! TODO: add in calls to ptend%lq, etc (and for other ptend stuff), make them true. 
+          ptend%lq(1) = .true.
+          ptend%lu = .true.
+          ptend%lv = .true.
+          ptend%ls = .true.
+          call physics_ptend_init(ptend, state(c)%psetcols, ptend%name, ptend%ls, ptend%lu, ptend%lv, ptend%lq) ! has new required arguments in CESM2
 
           ncols = get_ncols_p(c)
    !  print *, "=========doloop ====>  ncols= ", ncols
