@@ -166,6 +166,12 @@ module physpkg
   integer ::  qpert_oldid        = 0 !(pbuf_00033, lat, lon) ;
   integer ::  T_TTEND_oldid      = 0 !(pbuf_00032, lat, lon) ;
 
+  ! replay observation arrays
+  real(r8),allocatable::Ufield3d (:,:,:) !(pcols,pver,begchunk:endchunk)
+  real(r8),allocatable::Vfield3d (:,:,:) !(pcols,pver,begchunk:endchunk)
+  real(r8),allocatable::Tfield3d (:,:,:) !(pcols,pver,begchunk:endchunk)
+  real(r8),allocatable::Qfield3d (:,:,:) !(pcols,pver,begchunk:endchunk)
+
 
 !=======================================================================
 contains
@@ -293,7 +299,7 @@ contains
   call pbuf_add_field('ACGCME_OLD', 'global', dtype_r8, (/pcols/), ACGCME_oldid       ) !(lat, lon) ;
   call pbuf_add_field('ACNUM_OLD', 'global', dtype_r8, (/pcols/), ACNUM_oldid        ) !(lat, lon) ;
   call pbuf_add_field('RELVAR_OLD', 'global', dtype_r8, (/pcols,pver/),  RELVAR_oldid       ) !(pbuf_00032, lat, lon) ;
-  call pbuf_add_field('ACCRE_ENHANT_OLD', 'global', dtype_r8, (/pcols,pver/),  ACCRE_ENHAN_oldid  ) !(pbuf_00032, lat, lon) ;
+  call pbuf_add_field('ACCRE_ENHAN_OLD', 'global', dtype_r8, (/pcols,pver/),  ACCRE_ENHAN_oldid  ) !(pbuf_00032, lat, lon) ;
   call pbuf_add_field('pblh_OLD', 'global', dtype_r8, (/pcols/), pblh_oldid         ) !(lat, lon) ;
   call pbuf_add_field('tke_OLD', 'global', dtype_r8, (/pcols,pverp/),  tke_oldid          ) !(pbuf_00033, lat, lon) ;
   call pbuf_add_field('kvh_OLD', 'global', dtype_r8, (/pcols,pverp/),  kvh_oldid          ) !(pbuf_00033, lat, lon) ;
@@ -1069,7 +1075,7 @@ contains
     call tropopause_init()
     call dadadj_init()
 
-    if (masterproc) write(iulog,*) 'dadadj init complete.'
+    !if (masterproc) write(iulog,*) 'dadadj init complete.'
 
     prec_dp_idx  = pbuf_get_index('PREC_DP')
     snow_dp_idx  = pbuf_get_index('SNOW_DP')
@@ -1101,7 +1107,7 @@ contains
     ! Initialize qneg3 and qneg4
     call qneg_init()
 
-    if (masterproc) write(iulog,*) 'qneg init complete.'
+    !if (masterproc) write(iulog,*) 'qneg init complete.'
 
   end subroutine phys_init
 
@@ -1177,6 +1183,8 @@ contains
 
     call t_startf ('physpkg_st1')
 
+    !if (masterproc) write(iulog,*) 'pbuf allocate physpkg.'
+
     call pbuf_allocate(pbuf2d, 'physpkg')
     call diag_allocate()
 
@@ -1184,6 +1192,7 @@ contains
     ! Advance time information
     !-----------------------------------------------------------------------
 
+    !if (masterproc) write(iulog,*) 'advance time step.'
     call phys_timestep_init(phys_state, cam_in, cam_out, pbuf2d)
 
     call t_stopf ('physpkg_st1')
@@ -1226,6 +1235,7 @@ contains
              phys_tend(c), phys_buffer_chunk, &
              cam_out(c), cam_in(c) )
       else
+        !if (masterproc) write(iulog,*) 'start tphysbc. state T: '!, phys_state(c)%t
         call tphysbc (ztodt, phys_state(c),           &
              phys_tend(c), phys_buffer_chunk, &
              cam_out(c), cam_in(c) )
@@ -1514,7 +1524,7 @@ contains
     endif
 
     ! Validate the physics state.
-    if (state_debug_checks) &
+    !if (state_debug_checks) &
          call physics_state_check(state, name="before tphysac")
 
     call t_startf('tphysac_init')
@@ -2014,8 +2024,10 @@ contains
     tend %dvdt(:ncol,:pver)  = 0._r8
 
     ! Verify state coming from the dynamics
-    if (state_debug_checks) &
+    !if (state_debug_checks) &
          call physics_state_check(state, name="before tphysbc (dycore?)")
+
+    !if (masterproc) write(iulog,*) 'check state T before tphysbc (dycore): '!, state%T ! not exploding T at this point
 
     call clybry_fam_adj( ncol, lchnk, map2chm, state%q, pbuf )
 
@@ -2026,7 +2038,7 @@ contains
          1, pcnst, qmin  ,state%q )
 
     ! Validate output of clybry_fam_adj.
-    if (state_debug_checks) &
+    !if (state_debug_checks) &
          call physics_state_check(state, name="clybry_fam_adj")
 
     !
@@ -2043,12 +2055,17 @@ contains
     ! Global mean total energy fixer
     !===================================================
     call t_startf('energy_fixer')
+    !if (masterproc) write(iulog,*) 'check state T before energy fixer: '!, state%T ! after this
+!    if (masterproc) write(iulog,*) 'check state Q before energy fixer: ', state%q ! after this
 
     call calc_te_and_aam_budgets(state, 'pBF')
     if (dycore_is('LR') .or. dycore_is('SE'))  then
+       !if (masterproc) write(iulog,*) 'dycore_is ', dycore_is('LR'), dycore_is('SE') 
        call check_energy_fix(state, ptend, nstep, flx_heat)
+       !if (masterproc) write(iulog,*) 'check state T after check_energy_fix: '!, state%T
        call physics_update(state, ptend, ztodt, tend)
        call check_energy_chng(state, tend, "chkengyfix", nstep, ztodt, zero, zero, zero, flx_heat)
+       !if (masterproc) write(iulog,*) 'check state T before check_energy_chng: '!, state%T
        call outfld( 'EFIX', flx_heat    , pcols, lchnk   )
     end if
     call calc_te_and_aam_budgets(state, 'pBP')
@@ -2067,6 +2084,7 @@ contains
 
     ! T tendency due to dynamics
     if( nstep > dyn_time_lvls-1 ) then
+       !if (masterproc) write(iulog,*) 'check state T due to dynamics '!, state%T, dtcore ! before this
        dtcore(:ncol,:pver) = (state%t(:ncol,:pver) - dtcore(:ncol,:pver))/ztodt
        call outfld( 'DTCORE', dtcore, pcols, lchnk )
     end if
@@ -2077,6 +2095,7 @@ contains
     ! Dry adjustment
     !===================================================
     call t_startf('dry_adjustment')
+    !if (masterproc) write(iulog,*) 'check state T before dry adjustment '!, state%T 
 
     call dadadj_tend(ztodt, state, ptend)
 
@@ -2088,6 +2107,7 @@ contains
     ! Moist convection
     !===================================================
     call t_startf('moist_convection')
+    !if (masterproc) write(iulog,*) 'check state T before moist convection'!, state%T
 
     call t_startf ('convect_deep_tend')
 
@@ -2184,6 +2204,9 @@ contains
 
     call t_stopf('carma_timestep_tend')
 
+    !if (masterproc) write(iulog,*) 'start microphsyics.', microp_scheme
+    !if (masterproc) write(iulog,*) 'check state T: '!, state%T ! exploding T at this point
+
     if( microp_scheme == 'RK' ) then
 
        !===================================================
@@ -2255,7 +2278,7 @@ contains
              ! =====================================================
              !    CLUBB call (PBL, shallow convection, macrophysics)
              ! =====================================================
-
+             !write(iulog,*) "start clubb_tend_cam"
              call clubb_tend_cam(state, ptend, pbuf, cld_macmic_ztodt,&
                 cmfmc, cam_in, macmic_it, cld_macmic_num_steps, &
                 dlf, det_s, det_ice)
@@ -2282,6 +2305,8 @@ contains
                 flx_cnd(:ncol)/cld_macmic_num_steps, &
                 det_ice(:ncol)/cld_macmic_num_steps, &
                 flx_heat(:ncol)/cld_macmic_num_steps)
+
+             !write(iulog,*) "done clubb_tend_cam"
 
           endif
 
@@ -2365,6 +2390,7 @@ contains
        snow_str(:ncol) = snow_pcw(:ncol) + snow_sed(:ncol)
 
     endif
+    !if (masterproc) write(iulog,*) 'done macro/micro.'
 
     ! Add the precipitation from CARMA to the precipitation from stratiform.
     if (carma_do_cldice .or. carma_do_cldliq) then
@@ -2652,6 +2678,211 @@ subroutine read_netcdf_FL(fileName, varname, field)
  !=== finish  subroutine "read_netcdf_FL" to read variables from Netcdf file : added F.lamraoui =
  !============================================================================================
 
+  subroutine read_netcdf_SW(anal_file, Replay_nlon, Replay_nlat)
+   use netcdf
+   use ppgrid,    only: pver,pcols,begchunk,endchunk
+   use phys_grid,   only: scatter_field_to_chunk
+   use dyn_grid      ,only: get_horiz_grid_dim_d
+   use error_messages,only: alloc_err
+   use cam_abortutils, only:endrun
+   !implicit none
+
+   ! Arguments
+   !-------------
+   character(len=*),intent(in):: anal_file
+
+   ! Local values
+   !-------------
+   integer lev
+   integer nlon,nlat,plev,istat
+   integer Replay_nlon,Replay_nlat,Replay_nlev
+   integer ncid,varid
+   integer ilat,ilon,ilev
+   real(r8) Xanal(Replay_nlon,Replay_nlat,pver) ! TODO: need to define Replay_lat et al
+   real(r8) Lat_anal(Replay_nlat)
+   real(r8) Lon_anal(Replay_nlon)
+   real(r8) Xtrans(Replay_nlon,pver,Replay_nlat)
+   !integer  hdim1_d,hdim2_d
+
+   Replay_nlev=pver
+
+   if(masterproc) then
+   ! Open the given file
+     !-----------------------
+   istat=nf90_open(trim(anal_file),NF90_NOWRITE,ncid)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*)'NF90_OPEN: failed for file ',trim(anal_file)
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+
+   ! Read in Dimensions
+     !--------------------
+   istat=nf90_inq_dimid(ncid,'lon',varid)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+   istat=nf90_inquire_dimension(ncid,varid,len=nlon)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+
+   istat=nf90_inq_dimid(ncid,'lat',varid)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+   istat=nf90_inquire_dimension(ncid,varid,len=nlat)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+
+   istat=nf90_inq_dimid(ncid,'lev',varid)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+   istat=nf90_inquire_dimension(ncid,varid,len=plev)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+
+   istat=nf90_inq_varid(ncid,'lon',varid)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+   istat=nf90_get_var(ncid,varid,Lon_anal)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+
+   istat=nf90_inq_varid(ncid,'lat',varid)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+   istat=nf90_get_var(ncid,varid,Lat_anal)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+
+   if((Replay_nlon.ne.nlon).or.(Replay_nlat.ne.nlat).or.(plev.ne.pver)) then
+    write(iulog,*) 'ERROR: replay_update_analyses_fv: nlon=',nlon,' Replay_nlon=',Replay_nlon
+    write(iulog,*) 'ERROR: replay_update_analyses_fv: nlat=',nlat,' Replay_nlat=',Replay_nlat
+    write(iulog,*) 'ERROR: replay_update_analyses_fv: plev=',plev,' pver=',pver
+    call endrun('replay_update_analyses_fv: analyses dimension mismatch')
+   endif
+
+   ! Read in, transpose lat/lev indices, 
+     ! and scatter data arrays
+     !----------------------------------
+   istat=nf90_inq_varid(ncid,'U',varid)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+   istat=nf90_get_var(ncid,varid,Xanal)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+   do ilat=1,nlat
+   do ilev=1,plev
+   do ilon=1,nlon
+     Xtrans(ilon,ilev,ilat)=Xanal(ilon,ilat,ilev)
+   end do
+   end do
+   end do
+ endif ! (masterproc) then
+ call scatter_field_to_chunk(1,Replay_nlev,1,Replay_nlon,Xtrans,   &
+                             Ufield3d(1,1,begchunk))
+
+ if(masterproc) then
+   istat=nf90_inq_varid(ncid,'V',varid)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+   istat=nf90_get_var(ncid,varid,Xanal)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+   do ilat=1,nlat
+   do ilev=1,plev
+   do ilon=1,nlon
+     Xtrans(ilon,ilev,ilat)=Xanal(ilon,ilat,ilev)
+   end do
+   end do
+   end do
+ endif ! (masterproc) then
+ call scatter_field_to_chunk(1,Replay_nlev,1,Replay_nlon,Xtrans,   &
+                             Vfield3d(1,1,begchunk))
+
+ if(masterproc) then
+   istat=nf90_inq_varid(ncid,'T',varid)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+   istat=nf90_get_var(ncid,varid,Xanal)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+   do ilat=1,nlat
+   do ilev=1,plev
+   do ilon=1,nlon
+     Xtrans(ilon,ilev,ilat)=Xanal(ilon,ilat,ilev)
+   end do
+   end do
+   end do
+ endif ! (masterproc) then
+ call scatter_field_to_chunk(1,Replay_nlev,1,Replay_nlon,Xtrans,   &
+                             Tfield3d(1,1,begchunk))
+
+ if(masterproc) then
+   istat=nf90_inq_varid(ncid,'Q',varid)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+   istat=nf90_get_var(ncid,varid,Xanal)
+   if(istat.ne.NF90_NOERR) then
+     write(iulog,*) nf90_strerror(istat)
+     call endrun ('UPDATE_ANALYSES_FV')
+   endif
+   do ilat=1,nlat
+   do ilev=1,plev
+   do ilon=1,nlon
+     Xtrans(ilon,ilev,ilat)=Xanal(ilon,ilat,ilev)
+   end do
+   end do
+   end do
+
+ ! Close analysis file
+ istat=nf90_close(ncid)
+ if(istat.ne.NF90_NOERR) then
+   write(iulog,*) nf90_strerror(istat)
+   call endrun ('UPDATE_ANALYSES_EUL')
+ endif
+
+ endif ! (masterproc) then
+ call scatter_field_to_chunk(1,Replay_nlev,1,Replay_nlon,Xtrans,   &
+                             Qfield3d(1,1,begchunk))
+
+   ! End Routine
+   !------------
+   return
+
+  end subroutine read_netcdf_SW
 
   subroutine replay_correction (state,tend,ztodt)
 
@@ -2672,7 +2903,10 @@ subroutine read_netcdf_FL(fileName, varname, field)
        use ioFileMod,     only: getfil
        use cam_history,    only: addfld, outfld
       use shr_mem_mod,       only: shr_mem_init, shr_mem_getusage
-       use pmgrid,          only: plon, plat 
+       use pmgrid,          only: plon, plat
+       use constituents,     only: cnst_get_ind
+       use check_energy,    only: check_energy_chng
+       use error_messages, only: alloc_err 
    
       real(r8) :: qtarget_c(pcols,begchunk:endchunk,pver)
       real(r8) :: utarget_c(pcols,begchunk:endchunk,pver)
@@ -2699,10 +2933,12 @@ subroutine read_netcdf_FL(fileName, varname, field)
          type(physics_ptend)   :: ptend                  ! indivdualparameterization tendencies
          real(r8) ::     arrq(pcols,begchunk:endchunk,pver),arrt(pcols,begchunk:endchunk,pver),arru(pcols,begchunk:endchunk,pver),arrv(pcols,begchunk:endchunk,pver)       ! Input array,chunked
          real(r8) :: zmean                        ! temporary zonal mean value
-         integer :: i, j, qconst, ifld,n ,ilat,ilon                 ! longitude, latitude,field, and global column indices
+         integer :: i, j, qconst, ifld,n ,ilat,ilon,istat                 ! longitude, latitude,field, and global column indices
          integer :: hdim1, hdim2, c, ncols, k, istep, modstep
+         integer :: hdim1_d, hdim2_d, Replay_nlon, Replay_nlat
          real(r8) ::rlat(pcols),damping_coef,wrk,forcingtime,dampingtime!,tmprand(128,64)
          real :: tmp_zero
+         real(r8) :: zero(pcols)                    ! array of zeros
          integer :: ilat_all(pcols)
          integer :: ndays, day, mon, yr, ncsec
          integer :: modstep6hr, modstep3hr
@@ -2710,7 +2946,7 @@ subroutine read_netcdf_FL(fileName, varname, field)
          logical,save :: corrector_step, started   
    !----- 
 
-         integer :: ierr,csize                          !!Added  
+         integer :: ierr,csize,indw                          !!Added  
        integer jerr
        character(len=256) :: ncdata_loc,filen,ncwrite_loc,outn
    integer :: dims2d(2)
@@ -2722,11 +2958,11 @@ subroutine read_netcdf_FL(fileName, varname, field)
      ! variable for reading netcdf 
        character(len=256)        :: fileName
    
-       real(r8),allocatable,  dimension(:,:,:) ::  Sfield3d
-       real(r8),allocatable,  dimension(:,:,:) ::  Tfield3d
-       real(r8),allocatable,  dimension(:,:,:) ::  Qfield3d
-       real(r8),allocatable,  dimension(:,:,:) ::  Ufield3d
-       real(r8),allocatable,  dimension(:,:,:) ::  Vfield3d
+       !real(r8),allocatable,  dimension(:,:,:) ::  Sfield3d
+       !real(r8),allocatable,  dimension(:,:,:) ::  Tfield3d
+       !real(r8),allocatable,  dimension(:,:,:) ::  Qfield3d
+       !real(r8),allocatable,  dimension(:,:,:) ::  Ufield3d
+       !real(r8),allocatable,  dimension(:,:,:) ::  Vfield3d
        !real(r8),allocatable,  dimension(:,:,:) ::  Zfield3d
    
    integer, dimension(11) :: monarray
@@ -2737,6 +2973,8 @@ subroutine read_netcdf_FL(fileName, varname, field)
         integer                  :: physgrid ! added - sweid
         type(var_desc_t) :: vardesc
    real(r8) :: msize,mrss
+
+   logical  :: lq(pcnst)
    
      !---------------------------flamraoui------------------------------
      
@@ -2787,8 +3025,9 @@ subroutine read_netcdf_FL(fileName, varname, field)
    !define constants
        forcingtime=1._r8*21600._r8       ! six hours in seconds
    
-   
+
        call get_horiz_grid_dim_d(hdim1, hdim2)
+       write(iulog,*) "horiz_grid hdim1, hdim2", hdim1, hdim2 
    
    
    modstep=int((mod(istep+6, 48)) / 6)
@@ -2801,7 +3040,8 @@ subroutine read_netcdf_FL(fileName, varname, field)
    
    !-------------------------------------------------------------------------------------
    !-----------------------------determine filename--------------------------------------
-      if (mon<10) then
+      if (hdim1 > 30) then ! for coarse grid, it's 24 x 19
+       if (mon<10) then
           if (day<10) then
               write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4,"0", I1,"-0",I1,"_",I1,".nc")' ) yr,mon, day,modstep
           else 
@@ -2814,6 +3054,21 @@ subroutine read_netcdf_FL(fileName, varname, field)
               write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4, I2,"-",I2,"_",I1,".nc")' ) yr,mon, day, modstep
           endif 
        endif  
+      else
+         if (mon<10) then
+            if (day<10) then
+                write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dartcoarse_",I4,"0", I1,"-0",I1,"_",I1,".nc")' ) yr,mon, day,modstep
+            else 
+                write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dartcoarse_",I4,"0", I1,"-",I2,"_",I1,".nc")' ) yr,mon, day, modstep
+            endif 
+         else   
+            if (day<10) then
+                write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dartcoarse_",I4,I2,"-0",I1,"_",I1,".nc")' ) yr,mon, day, modstep
+            else 
+                write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dartcoarse_",I4, I2,"-",I2,"_",I1,".nc")' ) yr,mon, day, modstep
+            endif 
+         endif 
+      endif
    
    INQUIRE(FILE=filename, EXIST=fileexists)
    
@@ -2888,21 +3143,18 @@ subroutine read_netcdf_FL(fileName, varname, field)
    if (corrector_step) then
    #if ( defined SPMD )
    do c = begchunk, endchunk
-      print*, "any ptend%lq? ", any(ptend%lq(:)) ! this gives false TODO
-      print*, "psetcols: ", state(c)%psetcols
-          ! TODO: add in calls to ptend%lq, etc (and for other ptend stuff), make them true. 
-          ptend%lq(1) = .true.
-          ptend%lu = .true.
-          ptend%lv = .true.
-          ptend%ls = .true.
-          call physics_ptend_init(ptend, state(c)%psetcols, ptend%name, ptend%ls, ptend%lu, ptend%lv, ptend%lq) ! has new required arguments in CESM2
+          ! reallocate ptend
+          call cnst_get_ind('Q',indw)
+          lq(:)   =.false.
+          lq(indw)=.true.
+          call physics_ptend_init(ptend, state(c)%psetcols, "none", ls=.true.,  lu=.true., lv=.true., lq=lq) 
 
           ncols = get_ncols_p(c)
    !  print *, "=========doloop ====>  ncols= ", ncols
    do i = 1, ncols
    do k=1,pver   
    
-       ptend%q(i,k,1) = ptend%q(i,k,1) + state(c)%qforce(i,k)/forcingtime
+       ptend%q(i,k,indw) = ptend%q(i,k,indw) + state(c)%qforce(i,k)/forcingtime 
        ptend%u(i,k) = ptend%u(i,k) + state(c)%uforce(i,k) /forcingtime
        ptend%v(i,k) = ptend%v(i,k) + state(c)%vforce(i,k) /forcingtime
        ptend%s(i,k) = ptend%s(i,k) + state(c)%sforce(i,k)/forcingtime
@@ -2915,12 +3167,12 @@ subroutine read_netcdf_FL(fileName, varname, field)
    !print *, "=====after forcing ===doloopcik=ptend%s(i,k,1) = ", ptend%s(1,1)
    !print *, "ptendusize",size(ptend%u)
    !apply tendencies to model
-       ptend%lq(1) = .true.
-       ptend%lu = .true.
-       ptend%lv = .true.
-       ptend%ls = .true.
-       call physics_update (state(c), ptend, ztodt, tend(c))
-       ! call physics_update(state, ptend, ztodt, tend) - changed order in CESM2
+       !ptend%lq(1) = .true.
+       !ptend%lu = .true.
+       !ptend%lv = .true.
+       !ptend%ls = .true.
+       call physics_update (state(c), ptend, ztodt, tend(c)) ! this calls ptend deallocate
+       call check_energy_chng(state(c), tend(c), "replay", istep, ztodt, zero, zero, zero, zero)
    end do
    #endif
    endif
@@ -2935,19 +3187,19 @@ subroutine read_netcdf_FL(fileName, varname, field)
    
        if  (modstep6hr==5 .AND. .NOT. corrector_step ) then
    
-      call cam_pio_openfile(File, trim(filename), 0)
-        csize=endchunk-begchunk+1
-        dims(1) = pcols
-        dims(2) = csize
+      !call cam_pio_openfile(File, trim(filename), 0)
+        !csize=endchunk-begchunk+1
+        !dims(1) = pcols
+        !dims(2) = csize
    
-           allocate(tmpfield(pcols*csize*pver))
-           allocate(Tfield3d(pcols,pver,begchunk:endchunk))
-           allocate(Ufield3d(pcols,pver,begchunk:endchunk))
-           allocate(Vfield3d(pcols,pver,begchunk:endchunk))
-           allocate(Qfield3d(pcols,pver,begchunk:endchunk))
+           !allocate(tmpfield(pcols*csize*pver))
+           !allocate(Tfield3d(pcols,pver,begchunk:endchunk))
+           !allocate(Ufield3d(pcols,pver,begchunk:endchunk))
+           !allocate(Vfield3d(pcols,pver,begchunk:endchunk))
+           !allocate(Qfield3d(pcols,pver,begchunk:endchunk))
            !allocate(Zfield3d(pcols,pver,begchunk:endchunk))
    
-           tmpfield(:)=0.0
+           !tmpfield(:)=0.0
    
            ! call get_phys_decomp(iodesc,1,pver,1,pio_double)
            ! same as get_phys_decomp_mdnd(iodesc, fdim, mdim, ldim, dtype, fileorder_in, column)
@@ -2958,47 +3210,72 @@ subroutine read_netcdf_FL(fileName, varname, field)
            ! fdims: shape of field in netcdf     
 
             ! from restart_physics? 
-            physgrid = cam_grid_id('physgrid')
+            !physgrid = cam_grid_id('physgrid')
+            !call cam_grid_dimensions(physgrid, gdims(1:2))
 
-            call cam_grid_dimensions(physgrid, gdims(1:2))
-
-            if (gdims(2) == 1) then
-               nhdims = 1
-            else
-               nhdims = 2
-            end if
-            call cam_grid_get_decomp(physgrid, dims(1:2), gdims(1:nhdims), pio_double, &
-               iodesc)
+            !if (gdims(2) == 1) then
+            !   nhdims = 1
+            !else
+            !   nhdims = 2
+            !end if
+            !call cam_grid_get_decomp(physgrid, dims(1:2), gdims(1:nhdims), pio_double, &
+            !   iodesc)
             ! maybe?
    
-           ierr = pio_inq_varid(File, "T", vardesc)
-           call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
-           call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
-           Tfield3d = reshape(tmpfield, (/pcols,pver, csize/))
+           !ierr = pio_inq_varid(File, "T", vardesc)
+           !call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
+           !call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
+           !Tfield3d = reshape(tmpfield, (/pcols,pver, csize/))
    
-           ierr = pio_inq_varid(File, "U", vardesc)
-           call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
-           call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
-           Ufield3d = reshape(tmpfield, (/pcols,pver, csize/))
+           !ierr = pio_inq_varid(File, "U", vardesc)
+           !call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
+           !call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
+           !Ufield3d = reshape(tmpfield, (/pcols,pver, csize/))
    
-           ierr = pio_inq_varid(File, "V", vardesc)
-           call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
-           call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
-           Vfield3d = reshape(tmpfield, (/pcols,pver, csize/))
+           !ierr = pio_inq_varid(File, "V", vardesc)
+           !call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
+           !call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
+           !Vfield3d = reshape(tmpfield, (/pcols,pver, csize/))
    
-           ierr = pio_inq_varid(File, "Q", vardesc)
-           call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
-           call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
-           Qfield3d = reshape(tmpfield, (/pcols,pver, csize/))
+           !ierr = pio_inq_varid(File, "Q", vardesc)
+           !call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
+           !call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
+           !Qfield3d = reshape(tmpfield, (/pcols,pver, csize/))
    
            !ierr = pio_inq_varid(File, "Z3", vardesc)
            !call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
            !call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
            !Zfield3d(:,:,:) = reshape(tmpfield, (/pcols,pver, csize/))
+
+         if(masterproc) then
+            write(iulog,*) 'replay: Reading analyses:',trim(filename)
+         endif
+        
+         call get_horiz_grid_dim_d(hdim1_d,hdim2_d)
+         Replay_nlon=hdim1_d
+         Replay_nlat=hdim2_d
+         
+         allocate(Ufield3d(pcols,pver,begchunk:endchunk),stat=istat)
+         call alloc_err(istat,'replay_init','Ufield3d',pcols*pver*((endchunk-begchunk)+1))
+         allocate(Vfield3d(pcols,pver,begchunk:endchunk),stat=istat)
+         call alloc_err(istat,'replay_init','Vfield3d',pcols*pver*((endchunk-begchunk)+1))
+         allocate(Tfield3d(pcols,pver,begchunk:endchunk),stat=istat)
+         call alloc_err(istat,'replay_init','Tfield3d',pcols*pver*((endchunk-begchunk)+1))
+         allocate(Qfield3d(pcols,pver,begchunk:endchunk),stat=istat)
+         call alloc_err(istat,'replay_init','Qfield3d',pcols*pver*((endchunk-begchunk)+1))
+
+         Ufield3d(:pcols,:pver,begchunk:endchunk)=0._r8
+         Vfield3d(:pcols,:pver,begchunk:endchunk)=0._r8
+         Tfield3d(:pcols,:pver,begchunk:endchunk)=0._r8
+         Qfield3d(:pcols,:pver,begchunk:endchunk)=0._r8
+
+         call read_netcdf_SW(trim(filename), Replay_nlon, Replay_nlat)
    
-      call pio_closefile(File) 
+      !call pio_closefile(File) 
       write(iulog,*) "done read in reanalysis"
-      write(iulog,*) "state(c)%qforce(1,1): ", state(begchunk)%qforce(1,1)
+      write(iulog,*) "state(c)%sforce(1,1): ", state(begchunk)%sforce(1,1)
+      write(iulog,*) "begchunk: ", begchunk
+      write(iulog,*) "anal_field T(1,1,1): ", Tfield3d(1,1,begchunk)
    
            do c = begchunk, endchunk
                ncols = get_ncols_p(c)
@@ -3013,9 +3290,10 @@ subroutine read_netcdf_FL(fileName, varname, field)
            end do
 
            write(iulog,*) "done update state"
-           write(iulog,*) "state(c)%qforce(1,1): ", state(begchunk)%qforce(1,1)
+           write(iulog,*) "state(c)%sforce(1,1): ", state(begchunk)%sforce(1,1)
+           write(iulog,*) "state(c)%sforce(2,2): ", state(begchunk)%sforce(2,2)
    
-           deallocate(tmpfield)
+           !deallocate(tmpfield)
            deallocate(Tfield3d)
            deallocate(Ufield3d)
            deallocate(Vfield3d)
@@ -3030,3 +3308,6 @@ subroutine read_netcdf_FL(fileName, varname, field)
    end subroutine replay_correction
 
 end module physpkg
+
+
+! try adding nudging_update_analyses_fv to read in nc files instead.

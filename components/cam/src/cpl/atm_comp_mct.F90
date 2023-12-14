@@ -335,7 +335,7 @@ CONTAINS
 
     ! Uses
     !
-    use physics_types,   only: physics_ptend ! added - sweidman
+    use physics_types,   only: physics_ptend, physics_ptend_reset ! added - sweidman
     !-----------------------------------------------------------------------
     !
     ! Arguments
@@ -608,19 +608,23 @@ CONTAINS
          end do
        end do
 
+       print *, 'done swap 1-a'
+
        ! zero out tendencies (make sure these are all)
-       ptend%s = 0._r8
-       ptend%hflux_srf = 0._r8
-       ptend%hflux_top = 0._r8
-       ptend%u = 0._r8
-       ptend%taux_srf = 0._r8
-       ptend%taux_top = 0._r8
-       ptend%v = 0._r8
-       ptend%tauy_srf = 0._r8
-       ptend%tauy_top = 0._r8
-       ptend%q = 0._r8
-       ptend%cflx_srf = 0._r8
-       ptend%cflx_top = 0._r8
+       ! could just use ptend reset
+       !ptend%s = 0._r8
+       !ptend%hflux_srf = 0._r8
+       !ptend%hflux_top = 0._r8
+       !ptend%u = 0._r8
+       !ptend%taux_srf = 0._r8
+       !ptend%taux_top = 0._r8
+       !ptend%v = 0._r8
+       !ptend%tauy_srf = 0._r8
+       !ptend%tauy_top = 0._r8
+       !ptend%q = 0._r8
+       !ptend%cflx_srf = 0._r8
+       !ptend%cflx_top = 0._r8
+       call physics_ptend_reset(ptend)
 
        do_restart=.FALSE.
        end if
@@ -628,12 +632,14 @@ CONTAINS
 
        ! Run cam radiation/clouds (run1)
 
+       print *, 'starting cam_run1'
        call t_startf ('CAM_run1')
        call cam_run1 ( cam_in, cam_out )
        call t_stopf  ('CAM_run1')
 
        ! Map output from cam to mct data structures
 
+       print *, 'starting cam export'
        call t_startf ('CAM_export')
        call atm_export( cam_out, a2x_a%rattr )
        call t_stopf ('CAM_export')
@@ -643,6 +649,7 @@ CONTAINS
     ! Get time of next radiation calculation - albedos will need to be
     ! calculated by each surface model at this time
 
+    print *, 'starting radiation time calc'
     call seq_timemgr_EClockGetData(Eclock,dtime=atm_cpl_dt)
     dtime = get_step_size()
     if (dtime < atm_cpl_dt) then

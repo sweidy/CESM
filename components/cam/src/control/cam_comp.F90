@@ -257,6 +257,7 @@ subroutine cam_run1(cam_in, cam_out)
    ! PHYS_RUN Call the Physics package
    !----------------------------------------------------------
    !
+   if (masterproc) write(iulog,*) 'Running phys_run1.'
    call t_barrierf ('sync_phys_run1', mpicom)
    call t_startf ('phys_run1')
    call phys_run1(phys_state, dtime_phys, phys_tend, pbuf2d,  cam_in, cam_out)
