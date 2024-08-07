@@ -2607,78 +2607,8 @@ subroutine phys_timestep_init(phys_state, cam_in, cam_out, pbuf2d)
 
 end subroutine phys_timestep_init
 
-!============================================================================================
-!===   subroutine "read_netcdf_FL" to read variables from Netcdf file : added F.lamraoui ====
-!============================================================================================
 
-subroutine read_netcdf_FL(fileName, varname, field)
-   use netcdf
-   implicit none
-      character(*),intent(in)          :: fileName
-      character (len=*),intent(in)     :: varname                    ! variable name  in netcdf 
-     real(r8), allocatable, dimension(:,:,:,:) , intent(out) ::  field  
-     real(r8), allocatable,dimension(:) :: time, lev, lat, lon
- !-- local 
-        integer  :: fid    ! netcdf file id
-        integer :: i, j, varid, numDims
-   !     integer, allocatable :: start_arr(:), count_arr(:)
-        integer ::    status  ! status output from netcdf routines
-        integer ::    ndim, nvar! sizes of netcdf file
-        integer :: dimID_TIME, dimID_DEPTH, dimID_LAT, dimID_LON, &
- &          mTIME, mDEPTH, mLAT, mLON, TIME_ID, DEPTH_ID, LAT_ID, LON_ID,&
- &          TEMP_ID, fidM
- 
-    status = nf90_open(fileName,nf90_nowrite,fid)
-  
- !- read ID of dimensions of interest and save them in
- !  dimID_TIME, dimID_DEPTH, dimID_LAT, dimID_LON
-    print*,  'read ID of dimensions of interest and save them in '
-    status = NF90_INQ_DIMID(fid,"time",dimID_TIME)
-    status = NF90_INQ_DIMID(fid,"lev",dimID_DEPTH)
-    status = NF90_INQ_DIMID(fid,"lat",dimID_LAT)
-    status = NF90_INQ_DIMID(fid,"lon",dimID_LON)
- 
-    print*,  'read values of dimensions and store in mTIME, mDEPTH, mLAT, mLON :'
- !- read values of dimensions and store in mTIME, mDEPTH, mLAT, mLON :
-    status = NF90_INQUIRE_DIMENSION(fid,dimID_TIME,len=mTIME)
-    status = NF90_INQUIRE_DIMENSION(fid,dimID_DEPTH,len=mDEPTH)
-    status = NF90_INQUIRE_DIMENSION(fid,dimID_LAT,len=mLAT)
-    status = NF90_INQUIRE_DIMENSION(fid,dimID_LON,len=mLON)
- 
-    print*,  '!- Allocation of arrays : '
- !- Allocation of arrays :
-    ALLOCATE(  time(mTIME)  )
-    ALLOCATE(  lev(mDEPTH)  )
-    ALLOCATE(  lat(mLAT)  )
-    ALLOCATE(  lon(mLON)  )
-    ALLOCATE(  field(mLON,mLAT,mDEPTH,mTIME)  )
- !- read ID of variables of interest and store them in xxxx_ID :
-    print*,  'read ID of variables of interest and store them in xxxx_ID : '
-    status = NF90_INQ_VARID(fid,"time",TIME_ID)
-    status = NF90_INQ_VARID(fid,"lev",DEPTH_ID)
-    status = NF90_INQ_VARID(fid,"lat",LAT_ID)
-    status = NF90_INQ_VARID(fid,"lat",LON_ID)
-    status = NF90_INQ_VARID(fid,varname,TEMP_ID)
-    print*,  '!- read and store values of each variable : '
- !- read and store values of each variable :
-    status = NF90_GET_VAR(fid,TIME_ID,time)
-    status = NF90_GET_VAR(fid,DEPTH_ID,lev)
-    status = NF90_GET_VAR(fid,LAT_ID,lat)
-    status = NF90_GET_VAR(fid,LON_ID,lon)
-    status = NF90_GET_VAR(fid,TEMP_ID,field)
- !----
-     print *, "from subroutine , shape(T) = ", shape(field)
-     print *, "from subroutine ,SIZE(T) = ", SIZE(field)
-    print *, " from subroutine , print  -------varname = ", varname
-    print*,  '!- close netcdf file : '
- !- close netcdf file :
-    status = NF90_CLOSE(fid)
-  end subroutine read_netcdf_FL
- !============================================================================================
- !=== finish  subroutine "read_netcdf_FL" to read variables from Netcdf file : added F.lamraoui =
- !============================================================================================
-
-  subroutine read_netcdf_SW(anal_file, Replay_nlon, Replay_nlat)
+subroutine read_netcdf_SW(anal_file, Replay_nlon, Replay_nlat)
    use netcdf
    use ppgrid,    only: pver,pcols,begchunk,endchunk
    use phys_grid,   only: scatter_field_to_chunk
@@ -3044,28 +2974,36 @@ subroutine read_netcdf_FL(fileName, varname, field)
        if (mon<10) then
           if (day<10) then
               write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4,"0", I1,"-0",I1,"_",I1,".nc")' ) yr,mon, day,modstep
+            !write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/MERRA_cam6/IC/MERRA2_",I4,"0", I1,"0",I1,"_",I1,".nc")' ) yr,mon, day,modstep
           else 
-              write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4,"0", I1,"-",I2,"_",I1,".nc")' ) yr,mon, day, modstep
+             write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4,"0", I1,"-",I2,"_",I1,".nc")' ) yr,mon, day, modstep
+            !write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/MERRA_cam6/IC/MERRA2_",I4,"0", I1,I2,"_",I1,".nc")' ) yr,mon, day, modstep
           endif 
        else   
           if (day<10) then
               write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4,I2,"-0",I1,"_",I1,".nc")' ) yr,mon, day, modstep
+            !write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/MERRA_cam6/IC/MERRA2_",I4,I2,"0",I1,"_",I1,".nc")' ) yr,mon, day, modstep
           else 
               write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dart32_",I4, I2,"-",I2,"_",I1,".nc")' ) yr,mon, day, modstep
+            !write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/MERRA_cam6/IC/MERRA2_",I4, I2,I2,"_",I1,".nc")' ) yr,mon, day, modstep
           endif 
        endif  
       else
          if (mon<10) then
             if (day<10) then
-                write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dartcoarse_",I4,"0", I1,"-0",I1,"_",I1,".nc")' ) yr,mon, day,modstep
+               write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dartcoarse_",I4,"0", I1,"-0",I1,"_",I1,".nc")' ) yr,mon, day,modstep
+               !write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/MERRA_cam6/IC/MERRA2_",I4,"0", I1,"0",I1,"_",I1,".nc")' ) yr,mon, day,modstep
             else 
-                write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dartcoarse_",I4,"0", I1,"-",I2,"_",I1,".nc")' ) yr,mon, day, modstep
+               write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dartcoarse_",I4,"0", I1,"-",I2,"_",I1,".nc")' ) yr,mon, day, modstep
+               !write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/MERRA_cam6/IC/MERRA2_",I4,"0", I1,I2,"_",I1,".nc")' ) yr,mon, day, modstep
             endif 
          else   
             if (day<10) then
-                write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dartcoarse_",I4,I2,"-0",I1,"_",I1,".nc")' ) yr,mon, day, modstep
+               write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dartcoarse_",I4,I2,"-0",I1,"_",I1,".nc")' ) yr,mon, day, modstep
+               !write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/MERRA_cam6/IC/MERRA2_",I4,I2,"0",I1,"_",I1,".nc")' ) yr,mon, day, modstep
             else 
-                write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dartcoarse_",I4, I2,"-",I2,"_",I1,".nc")' ) yr,mon, day, modstep
+               write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/dartIC/dartcoarse_",I4, I2,"-",I2,"_",I1,".nc")' ) yr,mon, day, modstep
+               !write (filename, '("/n/holylfs04/LABS/kuang_lab/Lab/sweidman/MERRA_cam6/IC/MERRA2_",I4, I2,I2,"_",I1,".nc")' ) yr,mon, day, modstep
             endif 
          endif 
       endif
@@ -3155,8 +3093,8 @@ subroutine read_netcdf_FL(fileName, varname, field)
    do k=1,pver   
    
        ptend%q(i,k,indw) = ptend%q(i,k,indw) + state(c)%qforce(i,k)/forcingtime 
-       ptend%u(i,k) = ptend%u(i,k) + state(c)%uforce(i,k) /forcingtime
-       ptend%v(i,k) = ptend%v(i,k) + state(c)%vforce(i,k) /forcingtime
+       ptend%u(i,k) = ptend%u(i,k) + state(c)%uforce(i,k)/forcingtime
+       ptend%v(i,k) = ptend%v(i,k) + state(c)%vforce(i,k)/forcingtime
        ptend%s(i,k) = ptend%s(i,k) + state(c)%sforce(i,k)/forcingtime
    
    !print *, "=====after forcing ===doloopcik=ptend%q(i,k,1) = ", ptend%q(i,k,1)
@@ -3187,65 +3125,6 @@ subroutine read_netcdf_FL(fileName, varname, field)
    
        if  (modstep6hr==5 .AND. .NOT. corrector_step ) then
    
-      !call cam_pio_openfile(File, trim(filename), 0)
-        !csize=endchunk-begchunk+1
-        !dims(1) = pcols
-        !dims(2) = csize
-   
-           !allocate(tmpfield(pcols*csize*pver))
-           !allocate(Tfield3d(pcols,pver,begchunk:endchunk))
-           !allocate(Ufield3d(pcols,pver,begchunk:endchunk))
-           !allocate(Vfield3d(pcols,pver,begchunk:endchunk))
-           !allocate(Qfield3d(pcols,pver,begchunk:endchunk))
-           !allocate(Zfield3d(pcols,pver,begchunk:endchunk))
-   
-           !tmpfield(:)=0.0
-   
-           ! call get_phys_decomp(iodesc,1,pver,1,pio_double)
-           ! same as get_phys_decomp_mdnd(iodesc, fdim, mdim, ldim, dtype, fileorder_in, column)
-           
-           ! replace with cam_pio_get_decomp(iodesc, ldims, fdims, dtype, map, field_dist_in, file_dist_in, permute)
-           ! example: call cam_pio_get_decomp(iodesc, ldims, fdims, pio_double, this%map) l:local,f:file
-            ! cam_grid_support might be helpful?
-           ! fdims: shape of field in netcdf     
-
-            ! from restart_physics? 
-            !physgrid = cam_grid_id('physgrid')
-            !call cam_grid_dimensions(physgrid, gdims(1:2))
-
-            !if (gdims(2) == 1) then
-            !   nhdims = 1
-            !else
-            !   nhdims = 2
-            !end if
-            !call cam_grid_get_decomp(physgrid, dims(1:2), gdims(1:nhdims), pio_double, &
-            !   iodesc)
-            ! maybe?
-   
-           !ierr = pio_inq_varid(File, "T", vardesc)
-           !call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
-           !call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
-           !Tfield3d = reshape(tmpfield, (/pcols,pver, csize/))
-   
-           !ierr = pio_inq_varid(File, "U", vardesc)
-           !call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
-           !call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
-           !Ufield3d = reshape(tmpfield, (/pcols,pver, csize/))
-   
-           !ierr = pio_inq_varid(File, "V", vardesc)
-           !call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
-           !call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
-           !Vfield3d = reshape(tmpfield, (/pcols,pver, csize/))
-   
-           !ierr = pio_inq_varid(File, "Q", vardesc)
-           !call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
-           !call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
-           !Qfield3d = reshape(tmpfield, (/pcols,pver, csize/))
-   
-           !ierr = pio_inq_varid(File, "Z3", vardesc)
-           !call pio_setframe(vardesc, int(1,kind=PIO_OFFSET))
-           !call pio_read_darray(File, vardesc, iodesc, tmpfield, ierr)
-           !Zfield3d(:,:,:) = reshape(tmpfield, (/pcols,pver, csize/))
 
          if(masterproc) then
             write(iulog,*) 'replay: Reading analyses:',trim(filename)
