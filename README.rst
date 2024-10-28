@@ -1,105 +1,62 @@
-==================================
- The Community Earth System Model
-==================================
+================================
+ Replay to reanalysis in CESM
+================================
 
-See the CESM web site for documentation and information:
-
-http://www.cesm.ucar.edu
-
-The CESM Quickstart Guide is available at:
-
-http://escomp.github.io/cesm
-
-This repository provides tools for managing the external components that
-make up a CESM tag - alpha, beta and release. CESM tag creation should
-be coordinated through CSEG at NCAR.
+This document describes how to use the replay functionality with CESM. It is assumed the user is already familiar with 
+how to run CESM on their machine. Documentation from the original model version can be found in the README_CESM.rst file. 
 
 .. sectnum::
 
 .. contents::
 
+What is a replay?
+=================
+
+Description of replay. 
+
+
 Software requirements
 =====================
 
-Software requirements for installing, building and running CESM
----------------------------------------------------------------
+Software requirements for installing, building and running the replay
+---------------------------------------------------------------------
 
-Installing, building and running CESM requires:
+Installing, building and running the replay requires:
 
-* a Unix-like operating system (Linux, AIX, OS X, etc.)
+* All of the software requirements for CESM listed on the README_CESM.rst
 
-* git client version 1.8 or newer
+* 3-hourly or more frequent reanalysis data interpolated to the 3D CAM grid at
+your desired resolution. Reanalysis must contain at least U, V, T, and Q. 
 
-* subversion client (we have tested with versions 1.6.11 and newer)
+For notes on how to properly interpolate the reanalysis to the CAM grid, we 
+suggest using the interpolation tools created for the CESM Nudging toolbox. 
+Documentation for the interpolation tools can be found in the `CAM Users Guide: Nudging <https://ncar.github.io/CAM/doc/build/html/users_guide/physics-modifications-via-the-namelist.html#target-data>`. 
 
-* python2 version 2.7 or newer (cime supports python3, but some CESM components are not python3-compliant)
 
-* perl version 5
+Obtaining the model code
+========================
 
-* build tools gmake and cmake
+The replay version of CESM requires modifications to multiple components of the model
+(i.e. CAM, CICE, CLM, CIME). However, modifications to all necessary components can be
+obtained by simply checking out this CESM repository. 
 
-* Fortran and C compilers
-
-  * See `Details on Fortran compiler versions`_ below for more information 
-
-* LAPACK and BLAS libraries
-
-* a NetCDF library version 4.3 or newer built with the same compiler you
-  will use for CESM
-
-  * a PnetCDF library is optional
-
-* a functioning MPI environment (unless you plan to run on a single core
-  with the CIME mpi-serial library)
-
-Details on Fortran compiler versions
-------------------------------------
-The Fortran compiler must support Fortran 2003 features. However, even
-among mainstream Fortran compilers that claim to support Fortran 2003,
-we have found numerous bugs. Thus, many compiler versions do *not* build
-or run CESM properly (see
-https://wiki.ucar.edu/display/ccsm/Fortran+Compiler+Bug+List for more
-details on older Fortran compiler versions).
-
-CESM2 is tested on several different systems with newer Fortran compilers:
-Please see `CESM2.0 Compiler/Machine Tests <https://docs.google.com/spreadsheets/d/15QUqsXD1Z0K_rYNTlykBvjTRt8s0XcQw0cfAj9DZbj0/edit#gid=0>`_
-for a spreadsheet of the current results.
-
-More details on porting CESM
-----------------------------
-
-For more details on porting CESM to a new machine, see
-http://esmci.github.io/cime/users_guide/porting-cime.html
-
-Obtaining the full model code and associated scripting infrastructure
-=====================================================================
-
-CESM2.0 is now released via github. You will need some familiarity with git in order
-to modify the code and commit these changes. However, to simply checkout and run the
-code, no git knowledge is required other than what is documented in the following steps.
-
-To obtain the CESM2.0 code you need to do the following:
+To obtain the replay model you need to do the following:
 
 #. Clone the repository. ::
 
-      git clone https://github.com/escomp/cesm.git my_cesm_sandbox
+      git clone https://github.com/sweidy/cesm.git my_replay_sandbox
 
-   This will create a directory ``my_cesm_sandbox/`` in your current working directory.
+   This will create a directory ``my_replay_sandbox/`` in your current working directory.
+   It is recommended that you create an entirely new CESM directory for using the replay,
+   since running a non-replay case is not currently possible in the replay verison. 
 
-#. Go into the newly created CESM repository and determine what version of CESM you want.
-   To see what cesm tags are available, simply issue the **git tag** command. ::
+#. Go into the newly created repository. There is no need to select a tag or model release,
+   as the Externals.cfg file will point to the correct replay branches for each model component. 
+   The replay was built from the most recently released version of CESM2 at the time of writing
+   (cesm2.1.5-rc.01); the model component versions corresponding to this version are commented
+   out in the Externals.cfg file for reference. ::
 
       cd my_cesm_sandbox
-      git tag
-
-#. Do a git checkout of the tag you want. If you want to checkout cesm2.0.beta07, you would issue the following. ::
-
-      git checkout cesm2.0.beta07
-
-   (It is normal and expected to get a message about being in 'detached
-   HEAD' state. For now you can ignore this, but it becomes important if
-   you want to make changes to your Externals.cfg file and commit those
-   changes to a branch.)
 
 #. Run the script **manage_externals/checkout_externals**. ::
 
@@ -109,141 +66,62 @@ To obtain the CESM2.0 code you need to do the following:
    populate the cesm directory with the relevant versions of each of the
    components along with the CIME infrastructure code.
 
-At this point you have a working version of CESM.
+At this point you have a working version of the replay.
 
-To see full details of how to set up a case, compile and run, see the CIME documentation at http://esmci.github.io/cime/ .
 
-More details on checkout_externals
-----------------------------------
+Running a replay case
+=====================
 
-The file **Externals.cfg** in your top-level CESM directory tells
-**checkout_externals** which tag/branch of each component should be
-brought in to generate your sandbox. (This file serves the same purpose
-as SVN_EXTERNAL_DIRECTORIES when CESM was in a subversion repository.)
+Most of differences between running the replay and a regular CESM case can be managed
+through namelist definitions set in user_nl_cam. You may customize your run as usual, 
+except for the 
 
-NOTE: Just like svn externals, checkout_externals will always attempt
-to make the working copy exactly match the externals description. For
-example, if you manually modify an external without updating Externals.cfg,
-(e.g. switch to a different tag), then rerunning checkout_externals
-will automatically restore the externals described in Externals.cfg. See
-below documentation `Customizing your CESM sandbox`_ for more details.
+#. Create a new case using the FHIST_DARTC6 compset* and the finite volume dynamical core.
+   Any resolution should work, as long as it matches your reanalysis data. You will also
+   need to specify to run an unsupported case. ::
 
-**You need to rerun checkout_externals whenever Externals.cfg has
-changed** (unless you have already manually updated the relevant
-external(s) to have the correct branch/tag checked out). Common times
-when this is needed are:
+      ./create_newcase --case cases/replay --compset FHIST_DARTC6 --res f19_f19_mg17 --run-unsupported
 
-* After checking out a new CESM branch/tag
+#. Make any changes to your job submission requests, then run case.setup. ::
 
-* After merging some other CESM branch/tag into your currently
-  checked-out branch
+      cd cases/replay
+      ./case.setup
 
-**checkout_externals** must be run from the root of the source
-tree. For example, if you cloned CESM with::
+#. Use a startup run and set the length of your run to double the time of your desired
+   run (because the model backs up and reruns the timesteps). For example, if you want 
+   to run a 2-year replay using reanalysis from 1980-1981, use: ::
 
-  git clone https://github.com/escomp/cesm.git my_cesm_sandbox
+      ./xmlchange RUN_TYPE="startup"
+      ./xmlchange RUN_STARTDATE=1980-01-01
+      ./xmlchange STOP_OPTION="nyears"
+      ./xmlchange STOP_N=4
 
-then you must run **checkout_externals** from
-``/path/to/my_cesm_sandbox``.
+#. Adjust the replay namelist parameters in user_nl_cam. At the minimum, you will need to set 
+   the replay to true and add directions to your reanalysis data (the four parameters below). 
+   An example user_nl_cam file is in this directory as example_user_nl_cam. ::
 
-To see more details of **checkout_externals**, issue ::
+      Replay_Model = .true.
+      Replay_Path = '/some/path/to/data/' 
+      Replay_File_Template = 'reanalysis_%y%m%d_%s.nc' 
+      Replay_Beg_Year = YYYY
 
-  ./manage_externals/checkout_externals --help
+#. Often, users want to save the replay tendencies as output to look at what forcing the replay
+   is using to push the model towards the reanalysis. The replay forcings are listed in the history 
+   master list as 'UDIFF' (m/s), 'VDIFF' (m/s), 'QDIFF' (kg/kg), and 'SDIFF' (J/kg). These values 
+   are the difference between the model and the reanalysis at the replay timestep (3hr, 9hr, 15 hr, 
+   21 hr). To get the tendencies applied by the replay during the nudging step, divide the DIFF 
+   output values by 6 hours in seconds. ::
 
-Customizing your CESM sandbox
-=============================
+      fincl2 = 'SDIFF:I','UDIFF:I','VDIFF:I','QDIFF:I'
+      mfilt=1,6
+      nhtfrq = 0,-3
 
-There are several use cases to consider when you want to customize or modify your CESM sandbox.
+   The way the history files are written is such that there are 6 timesteps in each file. Timestep 1 
+   and 4 are all 0 (this is the first pass before the tendency has been calculated). Timestep 2/3 (5/6) 
+   are duplicates, since the model calculates the differences every 6 hours but saves every 3 hours. So the 
+   information you want is from timesteps 2 and 5 (or 3 and 6) in the h1 files, if you save them as above. 
 
-Switching to a different CESM tag
----------------------------------
+#. Build and submit model as normal.
 
-If you have already checked out a tag and **HAVE NOT MADE ANY
-MODIFICATIONS** it is simple to change your sandbox. Say that you
-checked out cesm2.0.beta07 but really wanted to have cesm2.0.beta08;
-you would simply do the following::
-
-  git checkout cesm2.0.beta08
-  ./manage_externals/checkout_externals
-
-You should **not** use this method if you have made any source code
-changes, or if you have any ongoing CESM cases that were created from
-this sandbox. In these cases, it is often easiest to do a second **git
-clone**.
-
-Pointing to a different version of a component
-----------------------------------------------
-
-Each entry in **Externals.cfg** has the following form (we use CAM as an
-example below)::
- 
-  [cam]
-  tag = trunk_tags/cam5_4_143/components/cam
-  protocol = svn
-  repo_url = https://svn-ccsm-models.cgd.ucar.edu/cam1
-  local_path = components/cam
-  required = True
-
-Each entry specifies either a tag or a branch. To point to a new tag:
-
-#. Modify the relevant entry/entries in **Externals.cfg** (e.g., changing
-   ``cam5_4_143`` to ``cam5_4_144`` above)
-
-#. Checkout the new component(s)::
-
-     ./manage_externals/checkout_externals
-
-Keep in mind that changing individual components from a tag may result
-in an invalid model (won't compile, won't run, not scientifically
-meaningful) and is unsupported.
-
-Committing your change to Externals.cfg
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-After making this change, it's a good idea to commit the change in your
-local CESM git repository. First create a CESM branch in your local
-repository, then commit it. (Unlike with subversion, branches are stored
-locally unless you explicitly push them up to github. Feel free to
-create whatever local branches you'd like.) For example::
-
-  git checkout -b my_cesm_branch
-  git add Externals.cfg
-  git commit -m "Update CAM to cam5_4_144"
-
-Modifying a component
----------------------
-
-If you'd like to modify a component via a branch and point to that
-branch in your CESM sandbox, use the following procedure (again, using
-CAM as an example):
-
-#. Create a CAM branch. Since CAM originates from a subversion
-   repository, you will first need to create a branch in that
-   repository. Let's assume you have created this branch and called it
-   **my_branch**.
-
-#. Update **Externals.cfg** to point to your branch. You can replace the
-   **tag** entry with a **branch** entry, as follows::
-
-     [cam]
-     branch = branches/my_branch/components/cam
-     protocol = svn
-     repo_url = https://svn-ccsm-models.cgd.ucar.edu/cam1
-     local_path = components/cam
-     required = True
-
-#. Checkout your branch::
-
-     ./manage_externals/checkout_externals
-
-It's a good idea to commit your **Externals.cfg** file changes. See the above
-documentation, `Committing your change to Externals.cfg`_.
-
-Developer setup
-===============
-
-Developers who have not already done so should follow the recommended
-`one-time <https://github.com/esmci/cime/wiki/CIME-Git-Workflow#configure-git-one-time>`_
-setup directions for git. Developers may also want to set up
-`ssh <https://help.github.com/articles/connecting-to-github-with-ssh/>`_
-keys and switch to using the ``git@github.com:ESCOMP/cesm.git`` form of the github URLs.
+A complete list of namelist parameters available for the replay are described in the
+components/cam/bld/namelist_files/namelist_definition.xml file. 
