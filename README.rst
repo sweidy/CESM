@@ -73,7 +73,7 @@ Most of differences between running the replay and a regular CESM case can be ma
 through namelist definitions set in **user_nl_cam**. You may customize your run as usual, 
 except for the 
 
-#. Create a new case using the FHIST_DARTC6 compset* and the finite volume dynamical core.
+#. Create a new case using the FHIST_DARTC6 compset [*]_ and the finite volume dynamical core.
    Any resolution should work, as long as it matches your reanalysis data. You will also
    need to specify to run an unsupported case. ::
 
@@ -125,7 +125,7 @@ except for the
 A complete list of namelist parameters available for the replay are described in the
 **components/cam/bld/namelist_files/namelist_definition.xml** file. 
 
-* The replay requires resetting buffer variables to their previous values every time the model backs up. 
+[*] The replay requires resetting buffer variables to their previous values every time the model backs up. 
 The current setup only resets buffer variables in the FHIST_DARTC6 compset, which is similar to the normal AMIP
 compsets but with a stub river component and has been used for other data assimilation purposes. A description
 of the compset is in **components/cam/cime_config/confic_compsets.xml**. 
