@@ -30,7 +30,7 @@ your desired resolution. Reanalysis must contain at least U, V, T, and Q.
 
 For notes on how to properly interpolate the reanalysis to the CAM grid, we 
 suggest using the interpolation tools created for the CESM Nudging toolbox. 
-Documentation for the interpolation tools can be found in the `CAM Users Guide: Nudging <https://ncar.github.io/CAM/doc/build/html/users_guide/physics-modifications-via-the-namelist.html#target-data>`. 
+Documentation for the interpolation tools can be found in the `CAM Users Guide: Nudging <https://ncar.github.io/CAM/doc/build/html/users_guide/physics-modifications-via-the-namelist.html#target-data>`_. 
 
 
 Obtaining the model code
@@ -98,7 +98,7 @@ except for the
 
 #. Adjust the replay namelist parameters in user_nl_cam. At the minimum, you will need to set 
    the replay to true and add directions to your reanalysis data (the four parameters below). 
-   An example user_nl_cam file is in this directory as example_user_nl_cam. ::
+   An example user_nl_cam file is in this directory as user_nl_cam_example. ::
 
       Replay_Model = .true.
       Replay_Path = '/some/path/to/data/' 
@@ -112,14 +112,16 @@ except for the
    21 hr). To get the tendencies applied by the replay during the nudging step, divide the DIFF 
    output values by 6 hours in seconds. ::
 
-      fincl2 = 'SDIFF:I','UDIFF:I','VDIFF:I','QDIFF:I'
-      mfilt=1,6
+      fincl2 = 'SDIFF:I','UDIFF:I','VDIFF:I','QDIFF:I','U:I','V:I','T':I,'Q:I'
+      mfilt=1,3
       nhtfrq = 0,-3
 
-   The way the history files are written is such that there are 6 timesteps in each file. Timestep 1 
-   and 4 are all 0 (this is the first pass before the tendency has been calculated). Timestep 2/3 (5/6) 
+   The way the history files are written is such that there are 3 timesteps in each file. Timestep 1 
+   is all 0 (this is the first pass before the tendency has been calculated). Timesteps 2 and 3   
    are duplicates, since the model calculates the differences every 6 hours but saves every 3 hours. So the 
-   information you want is from timesteps 2 and 5 (or 3 and 6) in the h1 files, if you save them as above. 
+   information you want is from either timestep 2 or 3 in the h1 files, if you save them as above. 
+   And example script to extract the 6-hour differences is in this directory as 
+   extract_tendencies_example.sh. 
 
 #. Build and submit model as normal.
 

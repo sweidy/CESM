@@ -1,0 +1,20 @@
+! Users should add all user specific namelist changes below in the form of 
+! namelist_var = new_namelist_value 
+
+&cam_inparm
+
+fincl1 = 'PS:A', 'U:A', 'V:A', 'T:A', 'Q:A'
+fincl2 = 'SDIFF:I','UDIFF:I', 'VDIFF:I','QDIFF:I', 'T:I','U:I','V:I','Q:I'
+mfilt = 1,12 ! saving 3hrly data once per day
+nhtfrq = 0,-3
+
+/
+
+&replay_nl
+
+Replay_Model = .true. 
+Replay_Path = '/path/to/some/reanalysis/'
+Replay_File_Template = 'reanalysis_%y%m%d_%s.nc'
+Replay_Beg_Year = 1980
+
+/
