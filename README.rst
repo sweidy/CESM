@@ -18,9 +18,6 @@ Description of replay.
 Software requirements
 =====================
 
-Software requirements for installing, building and running the replay
----------------------------------------------------------------------
-
 Installing, building and running the replay requires:
 
 * All of the software requirements for CESM listed on the README_CESM.rst
@@ -53,8 +50,8 @@ To obtain the replay model you need to do the following:
 #. Go into the newly created repository. There is no need to select a tag or model release,
    as the Externals.cfg file will point to the correct replay branches for each model component. 
    The replay was built from the most recently released version of CESM2 at the time of writing
-   (cesm2.1.5-rc.01); the model component versions corresponding to this version are commented
-   out in the Externals.cfg file for reference. ::
+   (``cesm2.1.5-rc.01``); the model component versions corresponding to this version are commented
+   out in the **Externals.cfg** file for reference. ::
 
       cd my_cesm_sandbox
 
@@ -73,7 +70,7 @@ Running a replay case
 =====================
 
 Most of differences between running the replay and a regular CESM case can be managed
-through namelist definitions set in user_nl_cam. You may customize your run as usual, 
+through namelist definitions set in **user_nl_cam**. You may customize your run as usual, 
 except for the 
 
 #. Create a new case using the FHIST_DARTC6 compset* and the finite volume dynamical core.
@@ -98,7 +95,7 @@ except for the
 
 #. Adjust the replay namelist parameters in user_nl_cam. At the minimum, you will need to set 
    the replay to true and add directions to your reanalysis data (the four parameters below). 
-   An example user_nl_cam file is in this directory as user_nl_cam_example. ::
+   An example user_nl_cam file is in this directory as **user_nl_cam_example**. ::
 
       Replay_Model = .true.
       Replay_Path = '/some/path/to/data/' 
@@ -121,9 +118,14 @@ except for the
    are duplicates, since the model calculates the differences every 6 hours but saves every 3 hours. So the 
    information you want is from either timestep 2 or 3 in the h1 files, if you save them as above. 
    And example script to extract the 6-hour differences is in this directory as 
-   extract_tendencies_example.sh. 
+   **extract_tendencies_example.sh**. 
 
 #. Build and submit model as normal.
 
 A complete list of namelist parameters available for the replay are described in the
-components/cam/bld/namelist_files/namelist_definition.xml file. 
+**components/cam/bld/namelist_files/namelist_definition.xml** file. 
+
+* The replay requires resetting buffer variables to their previous values every time the model backs up. 
+The current setup only resets buffer variables in the FHIST_DARTC6 compset, which is similar to the normal AMIP
+compsets but with a stub river component and has been used for other data assimilation purposes. A description
+of the compset is in **components/cam/cime_config/confic_compsets.xml**. 
