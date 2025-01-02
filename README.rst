@@ -104,7 +104,7 @@ References
 
 .. |vspace| raw:: latex
 
-   \vspace{5mm}
+   \vspace{3mm}
 
 .. |br| raw:: html
 
@@ -118,7 +118,7 @@ References
       (1996). Data Assimilation Using Incremental Analysis Updates.
       *Monthly Weather Review*, *124*\ (6), 1256–1271.
       https://doi.org/10.1175/1520-0493(1996)124%3C1256:DAUIAU%3E2.0.CO;2
-
+      
       |vspace| |br|
 
    .. container:: csl-entry
@@ -129,6 +129,8 @@ References
       *Journal of Climate*, *32*\ (2), 639–661.
       https://doi.org/10.1175/JCLI-D-18-0598.1
 
+      |vspace| |br|
+
    .. container:: csl-entry
 
       DelSole, T., & Hou, A. Y. (1999). Empirical Correction of a
@@ -136,11 +138,15 @@ References
       Review*, *127*\ (11), 2533–2545.
       https://doi.org/10.1175/1520-0493(1999)127%3C2533:ECOADM%3E2.0.CO;2
 
+      |vspace| |br|
+
    .. container:: csl-entry
 
       Leith, C. E. (1978). Objective Methods for Weather Prediction.
       *Annual Review of Fluid Mechanics*, *10*\ (1), 107–128.
       https://doi.org/10.1146/annurev.fl.10.010178.000543
+
+      |vspace| |br|
 
    .. container:: csl-entry
 
@@ -148,6 +154,8 @@ References
       M. (2019). A Systematic Approach to Assessing the Sources and
       Global Impacts of Errors in Climate Models. *Journal of Climate*,
       *32*\ (23), 8301–8321. https://doi.org/10.1175/JCLI-D-19-0189.1
+
+      |vspace| |br|
 
    .. container:: csl-entry
 
