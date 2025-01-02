@@ -112,6 +112,7 @@ References
       https://doi.org/10.1175/1520-0493(1996)124%3C1256:DAUIAU%3E2.0.CO;2
 
 |
+|
 
    .. container:: csl-entry
 
