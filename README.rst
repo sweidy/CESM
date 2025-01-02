@@ -111,6 +111,8 @@ References
       *Monthly Weather Review*, *124*\ (6), 1256–1271.
       https://doi.org/10.1175/1520-0493(1996)124%3C1256:DAUIAU%3E2.0.CO;2
 
+|
+
    .. container:: csl-entry
 
       Chang, Y., Schubert, S. D., Koster, R. D., Molod, A. M., & Wang,
