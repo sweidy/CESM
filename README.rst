@@ -102,6 +102,14 @@ A complete list of namelist parameters available for the replay are described in
 References
 ==========
 
+.. |vspace| raw:: latex
+
+   \vspace{5mm}
+
+.. |br| raw:: html
+
+   <br />
+
 .. container:: csl-bib-body
 
    .. container:: csl-entry
@@ -111,6 +119,7 @@ References
       *Monthly Weather Review*, *124*\ (6), 1256–1271.
       https://doi.org/10.1175/1520-0493(1996)124%3C1256:DAUIAU%3E2.0.CO;2
 
+      |vspace| |br|
 
    .. container:: csl-entry
 
