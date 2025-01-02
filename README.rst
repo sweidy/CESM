@@ -112,7 +112,6 @@ References
       https://doi.org/10.1175/1520-0493(1996)124%3C1256:DAUIAU%3E2.0.CO;2
 
 |
-|
 
    .. container:: csl-entry
 
@@ -121,6 +120,8 @@ References
       Global Climate Models with a Focus on Impacts over North America.
       *Journal of Climate*, *32*\ (2), 639–661.
       https://doi.org/10.1175/JCLI-D-18-0598.1
+
+|
 
    .. container:: csl-entry
 
