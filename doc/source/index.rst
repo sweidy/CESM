@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-CESM Quickstart Guide (|version|)
+Replay Quickstart Guide (|version|)
 =================================
 
 .. important::
@@ -17,9 +17,10 @@ Table of contents
    :maxdepth: 2
 
    introduction.rst
-   downloading_cesm.rst
-   cesm_configurations.rst
-   quickstart.rst
+   installing_replay.rst
+   running_case.rst
+   replay_configurations.rst
+   api.rst
 
 
 
