@@ -64,9 +64,9 @@ Replay_coef:
          Default: 1.
 
 
-Configurations TODO
---------------------
+Hopeful future configuration options
+------------------------------------
 
-#. Windowing for replay like in the nudging toolbox (Will?)
+#. Windowing for replay like in the nudging toolbox.
+#. Allow for setting on and off each variable.
 #. Ability to change duration of replay and forcing times.
-#. Allow for setting on and off each variable (Will?)
