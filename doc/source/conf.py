@@ -40,7 +40,9 @@ extensions = ['sphinx.ext.intersphinx',
     'sphinx.ext.viewcode',
     'sphinx.ext.todo',
     'sphinxcontrib.programoutput',
-    'sphinx.ext.autosectionlabel'
+    'sphinx.ext.autosectionlabel',
+    'sphinxfortran.fortran_domain',
+    'sphinxfortran.fortran_autodoc'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -86,7 +88,6 @@ pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
-
 
 # -- Options for HTML output ----------------------------------------------
 

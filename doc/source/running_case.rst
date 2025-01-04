@@ -1,8 +1,8 @@
 .. _running:
 
-=============================
+============================
 Running a simple replay case
-=============================
+============================
 
 Most of differences between running the replay and a regular CESM case can be managed 
 through namelist definitions set in **user_nl_cam**. Example **user_nl_cam** and post-processing

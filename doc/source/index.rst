@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Replay Quickstart Guide (|version|)
-=================================
+===================================
 
 .. important::
    **There are separate versions of this documentation for each maintained CESM

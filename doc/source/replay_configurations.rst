@@ -1,8 +1,8 @@
 .. _configurations:
 
-=============================
+=======================================
 Available configurations for the replay
-=============================
+=======================================
 
 Available Compsets
 ------------------
@@ -17,6 +17,11 @@ Additional compsets could be added by making similar changes to the ocean or riv
 variables (any variables that show up in the component.r. restart file) as for the CICE and
 CLM components (see :ref:`API <Changes to SourceMods for Replay>` for descriptions of what files 
 need to be changed).
+
+Available Resolutions
+---------------------
+
+Replay should be able to use any fv resolution that matches your reanalysis dataset. 
 
 Namelist parameters
 -------------------
@@ -57,3 +62,11 @@ Replay_coef:
          usually 1 (full forcing) or 0 (no forcing).
        
          Default: 1.
+
+
+Configurations TODO
+--------------------
+
+#. Windowing for replay like in the nudging toolbox (Will?)
+#. Ability to change duration of replay and forcing times.
+#. Allow for setting on and off each variable (Will?)
