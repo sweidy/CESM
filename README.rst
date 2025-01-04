@@ -46,7 +46,7 @@ To obtain the replay model you need to do the following:
 #. Go into the newly created repository. There is no need to select a tag or model release, as the Externals.cfg file will point to the correct replay branches for each model component. 
    The replay was built from the most recently released version of CESM2 at the time of writing (``cesm2.1.5-rc.01``); the model component versions corresponding to this version are commented out in the **Externals.cfg** file for reference. ::
 
-      cd my_cesm_sandbox
+      cd my_replay_sandbox
 
 #. Run the script **manage_externals/checkout_externals**. ::
 
