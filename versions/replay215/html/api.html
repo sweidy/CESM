@@ -1,0 +1,641 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Changes to SourceMods for Replay &mdash; CESM replay replay215 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="CESM replay replay215 documentation" href="index.html"/>
+        <link rel="prev" title="Available configurations for the replay" href="replay_configurations.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> CESM replay
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                
+                  <div class="version-dropdown">
+                    <select class="version-list" id="version-list">
+                      <option value=''>replay215</option>
+                      
+                        
+                      
+                        
+                          <option value="">[placeholder]</option>
+                        
+                      
+                    </select>
+                  </div>
+                
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installing_replay.html">Installing the replay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running_case.html">Running a simple replay case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="replay_configurations.html">Available configurations for the replay</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Changes to SourceMods for Replay</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cime">CIME</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cam">CAM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cice">CICE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clm">CLM</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">CESM replay</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Changes to SourceMods for Replay</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="changes-to-sourcemods-for-replay">
+<span id="api"></span><h1>Changes to SourceMods for Replay<a class="headerlink" href="#changes-to-sourcemods-for-replay" title="Permalink to this heading">¶</a></h1>
+<p>Most changes have been labeled with an inline comment “added - sweid” or
+something similar. The <a class="reference internal" href="#f/replay.F90" title="f/replay.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">replay.F90</span></code></a> module is where the core of the replay occurs, and
+is likely the only file needed to understand how the replay works.</p>
+<section id="cime">
+<h2>CIME<a class="headerlink" href="#cime" title="Permalink to this heading">¶</a></h2>
+<p><strong>Module</strong> <a class="reference internal" href="#f/ESMF_ClockMod.F90" title="f/ESMF_ClockMod.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">ESMF_ClockMod.F90</span></code></a></p>
+<p>Source path: cime/src/share/esmf_wrf_timemgr/</p>
+<span class="target" id="f/ESMF_ClockMod.F90"></span><dl>
+<dt class="sig sig-object f" id="f/ESMF_ClockMod.F90/ESMF_ClockSetOLD">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">ESMF_ClockMod.F90/</span></span><span class="sig-name descname"><span class="pre">ESMF_ClockSetOLD</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ESMF_ClockMod.F90/ESMF_ClockSetOLD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use replay timing variable ContinueTime.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ESMF_ClockMod.F90/ESMF_ClockGetContinueTime">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">ESMF_ClockMod.F90/</span></span><span class="sig-name descname"><span class="pre">ESMF_ClockGetContinueTime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ESMF_ClockMod.F90/ESMF_ClockGetContinueTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define replay timing variable ContinueTime and allow other functions to query.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/ESMF_ClockMod.F90/ESMF_ClockAdvance">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">ESMF_ClockMod.F90/</span></span><span class="sig-name descname"><span class="pre">ESMF_ClockAdvance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ESMF_ClockMod.F90/ESMF_ClockAdvance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjust current time and advance time based on whether a replay or corrector step.
+Turn off sync alarms. Allows for other clock functions to work with replay. Changes
+clock alarms so the model doesn’t crash when backup occurs.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/cime_comp_mod.F90" title="f/cime_comp_mod.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">cime_comp_mod.F90</span></code></a></p>
+<p>Source path: cime/src/drivers/mct/main/</p>
+<span class="target" id="f/cime_comp_mod.F90"></span><dl>
+<dt class="sig sig-object f" id="f/cime_comp_mod.F90/cime_run">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">cime_comp_mod.F90/</span></span><span class="sig-name descname"><span class="pre">cime_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/cime_comp_mod.F90/cime_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset time and date to restart time at correct time.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/seq_timemgr_mod.F90" title="f/seq_timemgr_mod.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">seq_timemgr_mod.F90</span></code></a></p>
+<p>Source path: cime/src/drivers/mct/shr/</p>
+<span class="target" id="f/seq_timemgr_mod.F90"></span><dl>
+<dt class="sig sig-object f" id="f/seq_timemgr_mod.F90/seq_timemgr_clockAdvance">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">seq_timemgr_mod.F90/</span></span><span class="sig-name descname"><span class="pre">seq_timemgr_clockAdvance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/seq_timemgr_mod.F90/seq_timemgr_clockAdvance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change clock advance to replay-specific advance variable continue_tod.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/seq_timemgr_mod.F90/seq_timemgr_EClockInit">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">seq_timemgr_mod.F90/</span></span><span class="sig-name descname"><span class="pre">seq_timemgr_EClockInit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/seq_timemgr_mod.F90/seq_timemgr_EClockInit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjust clock time for restart.</p>
+</dd></dl>
+
+</section>
+<section id="cam">
+<h2>CAM<a class="headerlink" href="#cam" title="Permalink to this heading">¶</a></h2>
+<p><strong>Module</strong> <a class="reference internal" href="#f/cam_comp.F90" title="f/cam_comp.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">cam_comp.F90</span></code></a></p>
+<p>Source path: components/cam/src/control</p>
+<span class="target" id="f/cam_comp.F90"></span><dl>
+<dt class="sig sig-object f" id="f/cam_comp.F90/cam_run4">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">cam_comp.F90/</span></span><span class="sig-name descname"><span class="pre">cam_run4</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/cam_comp.F90/cam_run4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize and call variables from the physics buffer, including _old variables.
+Save buffer variables into “_old” at timestep the model is supposed to back up to
+(currently 00z, 06z, 12z, 18z). Switch buffer variable back to _old version when
+time for model to back up (currently 03z, 09z, 15z, 21z). Turns off clock alarm for
+cam clock out of sync.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/cam_history.F90" title="f/cam_history.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">cam_history.F90</span></code></a></p>
+<p>Source path: components/cam/src/control</p>
+<span class="target" id="f/cam_history.F90"></span><dl>
+<dt class="sig sig-object f" id="f/cam_history.F90/wshist">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">cam_history.F90/</span></span><span class="sig-name descname"><span class="pre">wshist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/cam_history.F90/wshist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Comment out end run if issue with history file writeout. Allows history files to
+be overwritten after the model backs up and re-runs with the replay forcing applied.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/camsrfexch.F90" title="f/camsrfexch.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">camsrfexch.F90</span></code></a></p>
+<p>Source path: components/cam/src/control</p>
+<span class="target" id="f/camsrfexch.F90"></span><dl>
+<dt class="sig sig-object f" id="f/camsrfexch.F90/cam_out">
+<em class="property"><span class="pre">type</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">camsrfexch.F90/</span></span><span class="sig-name descname"><span class="pre">cam_out</span></span><a class="headerlink" href="#f/camsrfexch.F90/cam_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define _old variables for cam_out (to coupler) variables.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/camsrfexch.F90/cam_in_t">
+<em class="property"><span class="pre">type</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">camsrfexch.F90/</span></span><span class="sig-name descname"><span class="pre">cam_in_t</span></span><a class="headerlink" href="#f/camsrfexch.F90/cam_in_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define _old variables for cam_in_t (from coupler) variables.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/camsrfexch.F90/hub2atm_alloc">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">camsrfexch.F90/</span></span><span class="sig-name descname"><span class="pre">hub2atm_alloc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/camsrfexch.F90/hub2atm_alloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate _old cam_in variables as needed.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/camsrfexch.F90/hub2atm_dealloc">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">camsrfexch.F90/</span></span><span class="sig-name descname"><span class="pre">hub2atm_dealloc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/camsrfexch.F90/hub2atm_dealloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deallocate _old cam_in variables as needed.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/runtime_opts.F90" title="f/runtime_opts.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">runtime_opts.F90</span></code></a></p>
+<p>Source path: components/cam/src/control</p>
+<span class="target" id="f/runtime_opts.F90"></span><dl>
+<dt class="sig sig-object f" id="f/runtime_opts.F90/read_namelist">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">runtime_opts.F90/</span></span><span class="sig-name descname"><span class="pre">read_namelist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/runtime_opts.F90/read_namelist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read in replay namelist parameters from user_nl_cam.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/atm_comp_mct.F90" title="f/atm_comp_mct.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">atm_comp_mct.F90</span></code></a></p>
+<p>Source path: components/cam/src/cpl</p>
+<span class="target" id="f/atm_comp_mct.F90"></span><dl>
+<dt class="sig sig-object f" id="f/atm_comp_mct.F90/atm_run_mct">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">atm_comp_mct.F90/</span></span><span class="sig-name descname"><span class="pre">atm_run_mct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/atm_comp_mct.F90/atm_run_mct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save cam_out and cam_in variables into “_old” at timestep the model is supposed to back up to
+(currently 00z, 06z, 12z, 18z). Switch variable back to _old version when
+time for model to back up (currently 03z, 09z, 15z, 21z). Turns off clock alarm for
+cam clock out of sync.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/replay.F90" title="f/replay.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">replay.F90</span></code></a></p>
+<p>Source path: components/cam/src/physics/cam/</p>
+<span class="target" id="f/replay.F90"></span><dl>
+<dt class="sig sig-object f" id="f/replay.F90/replay_readnl">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">replay.F90/</span></span><span class="sig-name descname"><span class="pre">replay_readnl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/replay.F90/replay_readnl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read replay namelist parameters. End job and throw error if namelist parameters not properly
+defined. Send parameters to all processors.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/replay.F90/replay_register">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">replay.F90/</span></span><span class="sig-name descname"><span class="pre">replay_register</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/replay.F90/replay_register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register _old buffer fields used to store buffer information for model reset.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/replay.F90/read_netcdf_replay">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">replay.F90/</span></span><span class="sig-name descname"><span class="pre">read_netcdf_replay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/replay.F90/read_netcdf_replay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read reanalysis file for replay using file path and name defined in namelist. Only valid
+for fv grids.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/replay.F90/interpret_filename_replay">
+<em class="property"><span class="pre">function</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">replay.F90/</span></span><span class="sig-name descname"><span class="pre">interpret_filename_replay</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/replay.F90/interpret_filename_replay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interpret reanalysis filename based on template defined in namelist. Requires year, month,
+day, and seconds.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/replay.F90/replay_correction">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">replay.F90/</span></span><span class="sig-name descname"><span class="pre">replay_correction</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/replay.F90/replay_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set state replay forcing variables to 0 during unforced steps (first 3 hours). When time for
+model to reset (currently 03z, 09z, 15z, 21z), calls read of reanalysis file for current time.
+Calculates difference between model state and reanalysis. Sets state replay forcing variables
+as that difference. Applies replay forcing as tendency (divided by forcing time, which is
+6 hours in seconds by default) during replay forcing steps.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/cam_diagnostics.F90" title="f/cam_diagnostics.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">cam_diagnostics.F90</span></code></a></p>
+<p>Source path: components/cam/src/physics/cam/</p>
+<span class="target" id="f/cam_diagnostics.F90"></span><dl>
+<dt class="sig sig-object f" id="f/cam_diagnostics.F90/diag_init_dry">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">cam_diagnostics.F90/</span></span><span class="sig-name descname"><span class="pre">diag_init_dry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/cam_diagnostics.F90/diag_init_dry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add replay difference fields (SDIFF, QDIFF, UDIFF, VDIFF) to default history outfield lists.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/cam_diagnostics.F90/diag_phys_writeout">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">cam_diagnostics.F90/</span></span><span class="sig-name descname"><span class="pre">diag_phys_writeout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/cam_diagnostics.F90/diag_phys_writeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call writeout replay difference fields (SDIFF, QDIFF, UDIFF, VDIFF) when other state variables
+are also called.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/physics_types.F90" title="f/physics_types.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">physics_types.F90</span></code></a></p>
+<p>Source path: components/cam/src/physics/cam/</p>
+<span class="target" id="f/physics_types.F90"></span><dl>
+<dt class="sig sig-object f" id="f/physics_types.F90/physics_state_alloc">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">physics_types.F90/</span></span><span class="sig-name descname"><span class="pre">physics_state_alloc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/physics_types.F90/physics_state_alloc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define and allocate state type variables (sforce, qforce, vforce, uforce) for applying
+replay forcing to state.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/physpkg.F90" title="f/physpkg.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">physpkg.F90</span></code></a></p>
+<p>Source path: components/cam/src/physics/cam/</p>
+<span class="target" id="f/physpkg.F90"></span><dl>
+<dt class="sig sig-object f" id="f/physpkg.F90/phys_register">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">physpkg.F90/</span></span><span class="sig-name descname"><span class="pre">phys_register</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/physpkg.F90/phys_register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call register replay variables</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/physpkg.F90/phys_run2">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">physpkg.F90/</span></span><span class="sig-name descname"><span class="pre">phys_run2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/physpkg.F90/phys_run2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call replay correction function and physics writeout to save calculated replay forcings.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/physpkg.F90/tphsbc">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">physpkg.F90/</span></span><span class="sig-name descname"><span class="pre">tphsbc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/physpkg.F90/tphsbc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Comment out debug checks so model doesn’t crash with replay forcing applied.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/restart_physics.F90" title="f/restart_physics.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">restart_physics.F90</span></code></a></p>
+<p>Source path: components/cam/src/physics/cam/</p>
+<span class="target" id="f/restart_physics.F90"></span><dl>
+<dt class="sig sig-object f" id="f/restart_physics.F90/read_restart_physics">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">restart_physics.F90/</span></span><span class="sig-name descname"><span class="pre">read_restart_physics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/restart_physics.F90/read_restart_physics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Comment out call to read restart file since restart files will not have the right
+information to restart with a clean replay.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/dyn_comp.F90" title="f/dyn_comp.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">dyn_comp.F90</span></code></a></p>
+<p>Source path: components/cam/dynamics/fv</p>
+<span class="target" id="f/dyn_comp.F90"></span><dl>
+<dt class="sig sig-object f" id="f/dyn_comp.F90/dyn_init">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">dyn_comp.F90/</span></span><span class="sig-name descname"><span class="pre">dyn_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/dyn_comp.F90/dyn_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allocate dyn_in and dyn_out variables that are stored in the buffer.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/dyn_comp.F90/dyn_free_interface">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">dyn_comp.F90/</span></span><span class="sig-name descname"><span class="pre">dyn_free_interface</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/dyn_comp.F90/dyn_free_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Separate subroutine dyn_free_interface to be public outside of dyn_final
+for use in other functions. Deallocates _old variables as needed.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/stepon.F90" title="f/stepon.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">stepon.F90</span></code></a></p>
+<p>Source path: components/cam/dynamics/fv</p>
+<span class="target" id="f/stepon.F90"></span><dl>
+<dt class="sig sig-object f" id="f/stepon.F90/stepon_run3">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">stepon.F90/</span></span><span class="sig-name descname"><span class="pre">stepon_run3</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/stepon.F90/stepon_run3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save dynamics buffer variables into “_old” at timestep the model is supposed to back up to
+(currently 00z, 06z, 12z, 18z). Switch buffer variable back to _old version when
+time for model to back up (currently 03z, 09z, 15z, 21z). Turns off clock alarm for
+cam clock out of sync.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/pft_module.F90" title="f/pft_module.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">pft_module.F90</span></code></a></p>
+<p>Source path: components/cam/dynamics/fv</p>
+<span class="target" id="f/pft_module.F90"></span><dl>
+<dt class="sig sig-object f" id="f/pft_module.F90/pftinit">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">pft_module.F90/</span></span><span class="sig-name descname"><span class="pre">pftinit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/pft_module.F90/pftinit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deallocate variable for model reset.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/restart_dynamics.F90" title="f/restart_dynamics.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">restart_dynamics.F90</span></code></a></p>
+<p>Source path: components/cam/dynamics/fv</p>
+<span class="target" id="f/restart_dynamics.F90"></span><dl>
+<dt class="sig sig-object f" id="f/restart_dynamics.F90/read_restart_dynamics">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">restart_dynamics.F90/</span></span><span class="sig-name descname"><span class="pre">read_restart_dynamics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/restart_dynamics.F90/read_restart_dynamics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deallocate restart variables and pointers for model reset. Because of these
+changes, replay cannot restart automatically from restart variables.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/spmd_dyn.F90" title="f/spmd_dyn.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">spmd_dyn.F90</span></code></a></p>
+<p>Source path: components/cam/dynamics/fv</p>
+<span class="target" id="f/spmd_dyn.F90"></span><dl>
+<dt class="sig sig-object f" id="f/spmd_dyn.F90/spmdinit_dyn">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">spmd_dyn.F90/</span></span><span class="sig-name descname"><span class="pre">spmdinit_dyn</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/spmd_dyn.F90/spmdinit_dyn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deallocate dynamic grid variables as needed.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/CMakeLists.txt" title="f/CMakeLists.txt"><code class="xref f f-mod docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></a></p>
+<p>Source path: components/cam/src/physics/cam</p>
+<span class="target" id="f/CMakeLists.txt"></span><dl>
+<dt class="sig sig-object f">
+<span class="sig-name descname"><span class="pre">CAM</span> <span class="pre">source</span> <span class="pre">files</span></span></dt>
+<dd><p>Include replay.F90 in make file.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/namelist_definition.xml" title="f/namelist_definition.xml"><code class="xref f f-mod docutils literal notranslate"><span class="pre">namelist_definition.xml</span></code></a></p>
+<p>Source path: components/cam/bld/namelist_files/namelist_definition.xml</p>
+<span class="target" id="f/namelist_definition.xml"></span><dl>
+<dt class="sig sig-object f">
+<span class="sig-name descname"><span class="pre">Namelist</span> <span class="pre">defitions</span></span></dt>
+<dd><p>Add definitions for possible namelist parameters defined in user_nl_cam,
+used to configure the replay.</p>
+</dd></dl>
+
+</section>
+<section id="cice">
+<h2>CICE<a class="headerlink" href="#cice" title="Permalink to this heading">¶</a></h2>
+<p><strong>Module</strong> <a class="reference internal" href="#f/CICE_RunMod.F90" title="f/CICE_RunMod.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">CICE_RunMod.F90</span></code></a></p>
+<p>Source path: components/cice/src/drivers/cesm/</p>
+<span class="target" id="f/CICE_RunMod.F90"></span><dl>
+<dt class="sig sig-object f" id="f/CICE_RunMod.F90/CICE_Run">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">CICE_RunMod.F90/</span></span><span class="sig-name descname"><span class="pre">CICE_Run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/CICE_RunMod.F90/CICE_Run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add current time as argument. When current time is time for model to back up,
+subtract 3 hours from CICE time manager.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/ice_comp_mct.F90" title="f/ice_comp_mct.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">ice_comp_mct.F90</span></code></a></p>
+<p>Source path: components/cice/src/drivers/cesm/</p>
+<span class="target" id="f/ice_comp_mct.F90"></span><dl>
+<dt class="sig sig-object f" id="f/ice_comp_mct.F90/ice_run_mct">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">ice_comp_mct.F90/</span></span><span class="sig-name descname"><span class="pre">ice_run_mct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ice_comp_mct.F90/ice_run_mct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save buffer variables into “_old” at timestep the model is supposed to back up to
+(currently 00z, 06z, 12z, 18z). Switch buffer variable back to _old version when
+time for model to back up (currently 03z, 09z, 15z, 21z). Turns off clock alarm for
+cice clock out of sync.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/ice_flux.F90" title="f/ice_flux.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">ice_flux.F90</span></code></a></p>
+<p>Source path: components/cice/src/source/</p>
+<span class="target" id="f/ice_flux.F90"></span><dl>
+<dt class="sig sig-object f">
+<span class="sig-name descname"><span class="pre">Module</span> <span class="pre">variable</span> <span class="pre">declarations</span></span></dt>
+<dd><p>Define _old variables for active non-zero public buffer variables in the cice.r.
+file (for the FHIST_DARTC6 compset).</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/ice_state.F90" title="f/ice_state.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">ice_state.F90</span></code></a></p>
+<p>Source path: components/cice/src/source/</p>
+<span class="target" id="f/ice_state.F90"></span><dl>
+<dt class="sig sig-object f">
+<span class="sig-name descname"><span class="pre">Module</span> <span class="pre">variable</span> <span class="pre">declarations</span></span></dt>
+<dd><p>Define _old variables for active non-zero public buffer variables in the cice.r.
+file (for the FHIST_DARTC6 compset).</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/ice_orbital.F90" title="f/ice_orbital.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">ice_orbital.F90</span></code></a></p>
+<p>Source path: components/cice/src/source/</p>
+<span class="target" id="f/ice_orbital.F90"></span><dl>
+<dt class="sig sig-object f" id="f/ice_orbital.F90/compute_coszen">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">ice_orbital.F90/</span></span><span class="sig-name descname"><span class="pre">compute_coszen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ice_orbital.F90/compute_coszen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjust CICE clock when time for model to restart for calculation of
+coszen based on Earth’s orbit.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <code class="xref f f-mod docutils literal notranslate"><span class="pre">ice_dyn_shared.F90</span></code></p>
+<p>Source path: components/cice/src/source/</p>
+<span class="target" id="f/ice_comp_mct.F90"></span><dl>
+<dt class="sig sig-object f" id="f/ice_comp_mct.F90/ice_dyn_shared">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">ice_comp_mct.F90/</span></span><span class="sig-name descname"><span class="pre">ice_dyn_shared</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/ice_comp_mct.F90/ice_dyn_shared" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deallocate variable in case still has data after model backs up.</p>
+</dd></dl>
+
+</section>
+<section id="clm">
+<h2>CLM<a class="headerlink" href="#clm" title="Permalink to this heading">¶</a></h2>
+<p><strong>Module</strong> <a class="reference internal" href="#f/various" title="f/various"><code class="xref f f-mod docutils literal notranslate"><span class="pre">various</span></code></a></p>
+<p>Source path: components/clm/src/biogeophys/ and components/clm/src/main/</p>
+<span class="target" id="f/various"></span><dl>
+<dt class="sig sig-object f" id="f/various/InitAllocate">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">various/</span></span><span class="sig-name descname"><span class="pre">InitAllocate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/various/InitAllocate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define and allocate _old variables for all non-zero public buffer variables in the clm.r.
+file (for the FHIST_DARTC6 compset). Also deallocates _old variables for grid-type
+variables if the original buffer variable is also deallocated. Changes in the following files:</p>
+<ul class="simple">
+<li><p>Aerosol_Mod.F90</p></li>
+<li><p>CanopyStateType.F90</p></li>
+<li><p>EnergyFluxType.F90</p></li>
+<li><p>FrictionVelocityMod.F90</p></li>
+<li><p>IrrigationMod.F90</p></li>
+<li><p>LakeStateType.F90</p></li>
+<li><p>PhotosynthesisMod.F90</p></li>
+<li><p>SoilHydrologyType.F90</p></li>
+<li><p>SoilStateType.F90</p></li>
+<li><p>SolarAbsorbedType.F90</p></li>
+<li><p>SurfaceAlbedoType.F90</p></li>
+<li><p>TemperatureType.F90</p></li>
+<li><p>WaterStateType.F90</p></li>
+<li><p>WaterfluxType.F90</p></li>
+<li><p>ColumnType.F90</p></li>
+<li><p>LandunitType.F90</p></li>
+<li><p>PatchType.F90</p></li>
+<li><p>atm2lndType.F90</p></li>
+</ul>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/lnd_comp_mct.F90" title="f/lnd_comp_mct.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">lnd_comp_mct.F90</span></code></a></p>
+<p>Source path: components/clm/src/cpl</p>
+<span class="target" id="f/lnd_comp_mct.F90"></span><dl>
+<dt class="sig sig-object f" id="f/lnd_comp_mct.F90/lnd_run_mct">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">lnd_comp_mct.F90/</span></span><span class="sig-name descname"><span class="pre">lnd_run_mct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/lnd_comp_mct.F90/lnd_run_mct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save buffer variables into “_old” at timestep the model is supposed to back up to
+(currently 00z, 06z, 12z, 18z). Switch buffer variable back to _old version when
+time for model to back up (currently 03z, 09z, 15z, 21z). Turns off clock alarm for
+clm clock out of sync.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="replay_configurations.html" class="btn btn-neutral" title="Available configurations for the replay" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright .
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+     
+<script>var version_json_loc = "../../versions.json";</script>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/pop_ver.js"></script>
+    
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

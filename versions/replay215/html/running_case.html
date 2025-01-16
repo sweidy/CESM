@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Running a simple replay case &mdash; CESM replay replay215 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="CESM replay replay215 documentation" href="index.html"/>
+        <link rel="next" title="Available configurations for the replay" href="replay_configurations.html"/>
+        <link rel="prev" title="Installing the replay" href="installing_replay.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> CESM replay
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                
+                  <div class="version-dropdown">
+                    <select class="version-list" id="version-list">
+                      <option value=''>replay215</option>
+                      
+                        
+                      
+                        
+                          <option value="">[placeholder]</option>
+                        
+                      
+                    </select>
+                  </div>
+                
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installing_replay.html">Installing the replay</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Running a simple replay case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="replay_configurations.html">Available configurations for the replay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Changes to SourceMods for Replay</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">CESM replay</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Running a simple replay case</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/running_case.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="running-a-simple-replay-case">
+<span id="running"></span><h1>Running a simple replay case<a class="headerlink" href="#running-a-simple-replay-case" title="Permalink to this heading">¶</a></h1>
+<p>Most of differences between running the replay and a regular CESM case can be managed
+through namelist definitions set in <strong>user_nl_cam</strong>. Example <strong>user_nl_cam</strong> and post-processing
+scripts are in the Github repository for the replay: <a class="reference external" href="https://github.com/sweidy/CESM/">https://github.com/sweidy/CESM/</a>.</p>
+<ol class="arabic">
+<li><p>Create a new case using the FHIST_DARTC6 compset and the finite volume dynamical core.
+Any resolution should work, as long as it matches your reanalysis data. You will also
+need to specify to run an unsupported case.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">create_newcase</span> <span class="o">--</span><span class="n">case</span> <span class="n">cases</span><span class="o">/</span><span class="n">replay</span> <span class="o">--</span><span class="n">compset</span> <span class="n">FHIST_DARTC6</span> <span class="o">--</span><span class="n">res</span> <span class="n">f19_f19_mg17</span> <span class="o">--</span><span class="n">run</span><span class="o">-</span><span class="n">unsupported</span>
+</pre></div>
+</div>
+</li>
+<li><p>Make any changes to your job submission requests, then run case.setup.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">cases</span><span class="o">/</span><span class="n">replay</span>
+<span class="o">./</span><span class="n">case</span><span class="o">.</span><span class="n">setup</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use a startup run and set the length of your run to double the time of your desired run
+(because the model backs up and reruns the timesteps). For example, if you want to run a
+2-year replay using reanalysis from 1980-1981, use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">xmlchange</span> <span class="n">RUN_TYPE</span><span class="o">=</span><span class="s2">&quot;startup&quot;</span>
+<span class="o">./</span><span class="n">xmlchange</span> <span class="n">RUN_STARTDATE</span><span class="o">=</span><span class="mi">1980</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
+<span class="o">./</span><span class="n">xmlchange</span> <span class="n">STOP_OPTION</span><span class="o">=</span><span class="s2">&quot;nyears&quot;</span>
+<span class="o">./</span><span class="n">xmlchange</span> <span class="n">STOP_N</span><span class="o">=</span><span class="mi">4</span>
+</pre></div>
+</div>
+</li>
+<li><p>Adjust the replay namelist parameters in user_nl_cam. At the minimum, you will need to set
+the replay to true and add directions to your reanalysis data (the four parameters below).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Replay_Model</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
+<span class="n">Replay_Path</span> <span class="o">=</span> <span class="s1">&#39;/some/path/to/data/&#39;</span>
+<span class="n">Replay_File_Template</span> <span class="o">=</span> <span class="s1">&#39;reanalysis_%y%m</span><span class="si">%d</span><span class="s1">_</span><span class="si">%s</span><span class="s1">.nc&#39;</span>
+<span class="n">Replay_Beg_Year</span> <span class="o">=</span> <span class="n">YYYY</span>
+</pre></div>
+</div>
+</li>
+<li><p>Often, users want to save the replay tendencies as output to look at what forcing the replay
+is using to push the model towards the reanalysis. The replay forcings are listed in the history
+master list as ‘UDIFF’ (m/s), ‘VDIFF’ (m/s), ‘QDIFF’ (kg/kg), and ‘SDIFF’ (J/kg). These values are
+the difference between the model and the reanalysis at the replay timestep (3hr, 9hr, 15 hr, 21 hr).
+To get the tendencies applied by the replay during the nudging step, divide the DIFF output
+values by 6 hours in seconds.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fincl2</span> <span class="o">=</span> <span class="s1">&#39;SDIFF:I&#39;</span><span class="p">,</span><span class="s1">&#39;UDIFF:I&#39;</span><span class="p">,</span><span class="s1">&#39;VDIFF:I&#39;</span><span class="p">,</span><span class="s1">&#39;QDIFF:I&#39;</span><span class="p">,</span><span class="s1">&#39;U:I&#39;</span><span class="p">,</span><span class="s1">&#39;V:I&#39;</span><span class="p">,</span><span class="s1">&#39;T&#39;</span><span class="p">:</span><span class="n">I</span><span class="p">,</span><span class="s1">&#39;Q:I&#39;</span>
+<span class="n">mfilt</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span>
+<span class="n">nhtfrq</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span>
+</pre></div>
+</div>
+<p>The way the history files are written is such that there are 3 timesteps in each file. Timestep 1 is all 0
+(this is the first pass before the tendency has been calculated). Timesteps 2 and 3 are duplicates, since
+the model calculates the differences every 6 hours but saves every 3 hours. The relevant information from
+either timestep 2 or 3 in the h1 files, if you save them as above.</p>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</li>
+<li><p>Build and submit model as normal.</p></li>
+</ol>
+<p>Additional possible configurations available for the replay are described on the page
+<a class="reference internal" href="replay_configurations.html#available-configurations-for-the-replay"><span class="std std-ref">Available configurations for the replay</span></a>.</p>
+</section>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="replay_configurations.html" class="btn btn-neutral float-right" title="Available configurations for the replay" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="installing_replay.html" class="btn btn-neutral" title="Installing the replay" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright .
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+     
+<script>var version_json_loc = "../../versions.json";</script>
+
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/pop_ver.js"></script>
+    
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

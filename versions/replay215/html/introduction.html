@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Introduction (replay215) &mdash; CESM replay215 documentation</title>
+  <title>Introduction &mdash; CESM replay replay215 documentation</title>
   
 
   
@@ -40,9 +40,9 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="CESM replay215 documentation" href="index.html"/>
-        <link rel="next" title="Downloading CESM2 (replay215)" href="downloading_cesm.html"/>
-        <link rel="prev" title="CESM Quickstart Guide (replay215)" href="index.html"/> 
+    <link rel="top" title="CESM replay replay215 documentation" href="index.html"/>
+        <link rel="next" title="Installing the replay" href="installing_replay.html"/>
+        <link rel="prev" title="Replay Quickstart Guide (replay215)" href="index.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -61,7 +61,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> CESM
+            <a href="index.html" class="icon icon-home"> CESM replay
           
 
           
@@ -109,18 +109,16 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction (replay215)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-use-this-document">How To Use This Document</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cesm-model-version-naming-conventions">CESM Model Version Naming Conventions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#cesm-overview">CESM Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-the-replay">What is the replay?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#software-requirements">Software requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#cesm2-software-operating-system-prerequisites">CESM2 Software/Operating System Prerequisites</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="downloading_cesm.html">Downloading CESM2 (replay215)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cesm_configurations.html">CESM2 Configurations (replay215)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick Start: CESM Model Workflow (replay215)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installing_replay.html">Installing the replay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running_case.html">Running a simple replay case</a></li>
+<li class="toctree-l1"><a class="reference internal" href="replay_configurations.html">Available configurations for the replay</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Changes to SourceMods for Replay</a></li>
 </ul>
 
             
@@ -135,7 +133,7 @@
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">CESM</a>
+          <a href="index.html">CESM replay</a>
         
       </nav>
 
@@ -165,7 +163,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Introduction (replay215)</li>
+      <li>Introduction</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -184,102 +182,94 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="introduction-version">
-<span id="introduction"></span><h1>Introduction (replay215)<a class="headerlink" href="#introduction-version" title="Permalink to this heading">¶</a></h1>
-<section id="how-to-use-this-document">
-<h2>How To Use This Document<a class="headerlink" href="#how-to-use-this-document" title="Permalink to this heading">¶</a></h2>
-<p>This guide instructs both novice and experienced users on downloading,
-building and running <a class="reference external" href="http://www.cesm.ucar.edu/models/cesm2">CESM2</a>.</p>
-<p>CESM2 is built on the <a class="reference external" href="http://github.com/ESMCI/cime">CIME framework</a>.</p>
-<p>The majority of the CESM2 User’s Guide is contained in the <a class="reference external" href="http://esmci.github.io/cime">CIME</a> documentation.</p>
-<p>If you are a new user, we recommend reading the first few sections of
-the <a class="reference external" href="http://esmci.github.io/cime">CIME</a> documentation which is written so that, as much as
-possible, individual sections stand on their own and the <a class="reference external" href="http://esmci.github.io/cime">CIME</a>
-documentation guide can be scanned and sections read in a relatively
-ad hoc order.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Throughout the guide, this presentation style indicates shell</span>
-<span class="go">commands and options, fragments of code, namelist variables, etc.</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Variables presented as <code class="docutils literal notranslate"><span class="pre">$VAR</span></code> in this guide typically refer to variables in XML files
-in a CESM case. From within a case directory, you can determine the value of such a
-variable with <code class="docutils literal notranslate"><span class="pre">./xmlquery</span> <span class="pre">VAR</span></code>. In some instances, <code class="docutils literal notranslate"><span class="pre">$VAR</span></code> refers to a shell
-variable or some other variable; we try to make these exceptions clear.</p>
-</div>
-<p>Please feel free to provide feedback to the <a class="reference external" href="https://bb.cgd.ucar.edu/">CESM forum</a> about how to improve the
-documentation.</p>
+  <section id="introduction">
+<span id="id1"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h1>
+<p>This guide describes how to use the replay functionality with CESM.
+It is assumed the user is already familiar with how to run CESM on their machine.
+Documentation from the original model version can be found in the
+<a class="reference external" href="https://escomp.github.io/CESM/versions/cesm2.1/html/index.html">CESM Quickstart Guide</a></p>
+<section id="what-is-the-replay">
+<h2>What is the replay?<a class="headerlink" href="#what-is-the-replay" title="Permalink to this heading">¶</a></h2>
+<p>The replay is a version of the Incremental Analysis Update (IAU) used for
+performing data assimilation, described in Bloom et al., 1996 and relating to
+work on empirical bias correction such as in Leith 1978 and DelSole and Hou 1999.
+In standard data assimilation cases, the IAU is used to push the model towards
+observations; in the replay, the model is pushed towards a reanalysis.
+This can be useful for determining short-term model biases and evaluating
+model performance (see Schubert et al., 2019), among other use cases.</p>
+<p>The replay is similar to nudging, but is less sensitive to nudging parameters
+and instabilities (Bloom et al., 1996). The difference is in the timing of the
+forcing towards the reanalysis. In the replay, the model runs forward 3 hours
+normally, with no forcing applied. Then, the difference between the model state
+and the reanalysis is measured (here any or all of U,V,T, and Q can be used)
+and saved in the model output. The model then backs up 3 hours to exactly where
+it was before, and runs forward 6 hours, this time with the forcing tendency
+applied based on the 3-hour difference. After 6 hours, the model moves forward
+another 3 hours without forcing, and the process repeats. This procedure allows
+the model to stay tightly constrained to the reanalysis throughout the run,
+assuming the 3-hour model drift is nearly linear. The outputs of the model
+difference from reanalysis at 3-hour increments are the short-term model biases
+from the reanalysis. The stability of the replay performance is assessed
+in Takacs et al., 2018.</p>
+<p>The replay is currently implemented and used at NASA’s Global Modeling and
+Assimilation Office in the GEOS model (Chang et al., 2019). Here we implement
+the same tool in CESM2 using open source code, a simple startup, and adjustable
+replay parameters. Having the replay in multiple models allows for comparison of
+results across models, and the ability to easily assess short-term model drift in CESM.</p>
 </section>
-<section id="cesm-model-version-naming-conventions">
-<h2>CESM Model Version Naming Conventions<a class="headerlink" href="#cesm-model-version-naming-conventions" title="Permalink to this heading">¶</a></h2>
-<p>CESM model release versions include three numbers separated by a period (.)
-- CESM X.Y.Z</p>
-<ul class="simple">
-<li><p>X - corresponds to the major release number indicating significant
-science changes.</p></li>
-<li><p>Y - corresponds to the addition of new infrastructure and new science
-capabilities for targeted components.</p></li>
-<li><p>Z - corresponds to release bug fixes and machine updates.</p></li>
-</ul>
-<p>When refering to CESM2, it is understood that the all versions of the
-CESM2.Y.Z series of models are included.</p>
-<section id="cesm-overview">
-<h3>CESM Overview<a class="headerlink" href="#cesm-overview" title="Permalink to this heading">¶</a></h3>
-<p>The Community Earth System Model (CESM) is a coupled climate model for
-simulating Earth’s climate system. Composed of separate models
-simultaneously simulating the Earth’s atmosphere, ocean, land, river
-run-off, land-ice, and sea-ice, plus one central coupler/moderator
-component, CESM allows researchers to conduct fundamental research
-into the Earth’s past, present, and future climate states.</p>
-<p>CESM can be run on a number of different <a class="reference external" href="http://www.cesm.ucar.edu/models/cesm2/cesm/machines.html">hardware platforms</a>, and
-has a relatively flexible design with respect to <a class="reference external" href="http://esmci.github.io/cime/versions/master/html/users_guide/pes-threads.html">processor layout</a>
-of components.</p>
-<p>The CESM project is a cooperative effort among U.S. climate
-researchers.  Primarily supported by the <a class="reference external" href="https://www.nsf.gov/">National Science
-Foundation(NSF)</a> and centered at the <a class="reference external" href="https://ncar.ucar.edu/">National
-Center for Atmospheric Research (NCAR)</a> in
-Boulder, Colorado, the CESM project enjoys close collaborations with
-the <a class="reference external" href="https://energy.gov/">U.S. Department of Energy (DOE)</a> and the
-<a class="reference external" href="http://www.nasa.gov">National Aeronautics and Space Administration (NASA)</a>.  Scientific development of the CESM is guided
-by the CESM working groups, which meet twice a year. The main CESM
-workshop is held each year in June to showcase results from the
-various working groups and coordinate future CESM developments among
-the working groups. The <a class="reference external" href="http://www.cesm.ucar.edu/">CESM website</a>
-provides more information on the CESM project, such as the management
-structure, the scientific working groups, downloadable source code,
-and online archives of data from previous CESM experiments.</p>
-</section>
-</section>
-<section id="cesm2-software-operating-system-prerequisites">
-<h2>CESM2 Software/Operating System Prerequisites<a class="headerlink" href="#cesm2-software-operating-system-prerequisites" title="Permalink to this heading">¶</a></h2>
-<p>The following are the external system and software requirements for
-installing and running CESM2.</p>
-<ul class="simple">
-<li><p>UNIX style operating system such as CNL, AIX or Linux</p></li>
-<li><p>python &gt;= 2.7</p></li>
-<li><p>perl 5</p></li>
-<li><p>subversion client (version 1.8 or greater but less than v1.11) for downloading CAM, POP, and WW3</p></li>
-<li><p>git client (1.8 or greater)</p></li>
-<li><p>Fortran compiler with support for Fortran 2003</p></li>
-<li><p>C compiler</p></li>
-<li><p>MPI (although CESM does not absolutely require it for running on one processor)</p></li>
-<li><p><a class="reference external" href="http://www.unidata.ucar.edu/software/netcdf/">NetCDF 4.3 or newer</a>.</p></li>
-<li><p><a class="reference external" href="http://www.earthsystemmodeling.org/">ESMF 5.2.0 or newer (optional)</a>.</p></li>
-<li><p><a class="reference external" href="http://trac.mcs.anl.gov/projects/parallel-netcdf/">pnetcdf 1.7.0 is required and 1.8.1 is optional but recommended</a></p></li>
-<li><p><a class="reference external" href="https://trilinos.github.io/">Trilinos</a> may be required for certain configurations</p></li>
-<li><p><a class="reference external" href="http://www.netlib.org/lapack/">LAPACK</a> and <a class="reference external" href="http://www.netlib.org/blas/">BLAS</a></p></li>
-<li><p><a class="reference external" href="http://www.cmake.org/">CMake 2.8.6 or newer</a></p></li>
-</ul>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>NetCDF must be built with the same Fortran compiler as CESM. In the netCDF build the FC environment variable specifies which Fortran compiler to use. CESM is written mostly in Fortran, netCDF is written in C. Because there is no standard way to call a C program from a Fortran program, the Fortran to C layer between CESM and netCDF will vary depending on which Fortran compiler you use for CESM. When a function in the netCDF library is called from a Fortran application, the netCDF Fortran API calls the netCDF C library. If you do not use the same compiler to build netCDF and CESM you will in most cases get errors from netCDF saying certain netCDF functions cannot be found.</p>
+<section id="software-requirements">
+<h2>Software requirements<a class="headerlink" href="#software-requirements" title="Permalink to this heading">¶</a></h2>
+<p>Installing, building and running the replay requires:</p>
+<div class="line-block">
+<div class="line">- All of the software requirements for CESM listed on the <a class="reference external" href="https://escomp.github.io/CESM/versions/cesm2.1/html/introduction.html">CESM Quickstart Guide</a>.</div>
+<div class="line"><br /></div>
+<div class="line">- 3-hourly or more frequent reanalysis data interpolated to the 3D CAM grid at your desired resolution. Reanalysis must contain at least U, V, T, and Q.</div>
+<div class="line"><br /></div>
 </div>
-<p>Parallel-netCDF, also referred to as pnetcdf, is optional. If a user
-chooses to use pnetcdf, version 1.7.0 or later should be used with CESM.
-It is a library that is file-format compatible with netCDF, and provides
-higher performance by using MPI-IO. Pnetcdf is enabled by setting the
-<code class="docutils literal notranslate"><span class="pre">$PNETCDF_PATH</span></code> Makefile variable in the <code class="docutils literal notranslate"><span class="pre">Macros.make</span></code> file.</p>
+<p>For instructions on how to properly interpolate the reanalysis to the CAM grid, we suggest
+using the interpolation tools created for the CESM Nudging toolbox. Documentation
+for the interpolation tools can be found in the <a class="reference external" href="https://ncar.github.io/CAM/doc/build/html/users_guide/physics-modifications-via-the-namelist.html#target-data">CAM Users Guide:
+Nudging</a>.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
+<div class="csl-bib-body docutils container">
+<div class="csl-entry docutils container">
+<p>Bloom, S. C., Takacs, L. L., Silva, A. M. da, &amp; Ledvina, D.
+(1996). Data Assimilation Using Incremental Analysis Updates.
+<em>Monthly Weather Review</em>, <em>124</em>(6), 1256–1271.
+<a class="reference external" href="https://doi.org/10.1175/1520-0493(1996)124%3C1256:DAUIAU%3E2.0.CO;2">https://doi.org/10.1175/1520-0493(1996)124%3C1256:DAUIAU%3E2.0.CO;2</a></p>
+</div>
+<div class="csl-entry docutils container">
+<p>Chang, Y., Schubert, S. D., Koster, R. D., Molod, A. M., &amp; Wang,
+H. (2019). Tendency Bias Correction in Coupled and Uncoupled
+Global Climate Models with a Focus on Impacts over North America.
+<em>Journal of Climate</em>, <em>32</em>(2), 639–661.
+<a class="reference external" href="https://doi.org/10.1175/JCLI-D-18-0598.1">https://doi.org/10.1175/JCLI-D-18-0598.1</a></p>
+</div>
+<div class="csl-entry docutils container">
+<p>DelSole, T., &amp; Hou, A. Y. (1999). Empirical Correction of a
+Dynamical Model. Part I: Fundamental Issues. <em>Monthly Weather
+Review</em>, <em>127</em>(11), 2533–2545.
+<a class="reference external" href="https://doi.org/10.1175/1520-0493(1999)127%3C2533:ECOADM%3E2.0.CO;2">https://doi.org/10.1175/1520-0493(1999)127%3C2533:ECOADM%3E2.0.CO;2</a></p>
+</div>
+<div class="csl-entry docutils container">
+<p>Leith, C. E. (1978). Objective Methods for Weather Prediction.
+<em>Annual Review of Fluid Mechanics</em>, <em>10</em>(1), 107–128.
+<a class="reference external" href="https://doi.org/10.1146/annurev.fl.10.010178.000543">https://doi.org/10.1146/annurev.fl.10.010178.000543</a></p>
+</div>
+<div class="csl-entry docutils container">
+<p>Schubert, S. D., Chang, Y., Wang, H., Koster, R. D., &amp; Molod, A.
+M. (2019). A Systematic Approach to Assessing the Sources and
+Global Impacts of Errors in Climate Models. <em>Journal of Climate</em>,
+<em>32</em>(23), 8301–8321. <a class="reference external" href="https://doi.org/10.1175/JCLI-D-19-0189.1">https://doi.org/10.1175/JCLI-D-19-0189.1</a></p>
+</div>
+<div class="csl-entry docutils container">
+<p>Takacs, L. L., Suárez, M. J., &amp; Todling, R. (2018). The Stability
+of Incremental Analysis Update. <em>Monthly Weather Review</em>,
+<em>146</em>(10), 3259–3275. <a class="reference external" href="https://doi.org/10.1175/MWR-D-18-0117.1">https://doi.org/10.1175/MWR-D-18-0117.1</a></p>
+</div>
+</div>
 </section>
 </section>
 
@@ -293,10 +283,10 @@ higher performance by using MPI-IO. Pnetcdf is enabled by setting the
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="downloading_cesm.html" class="btn btn-neutral float-right" title="Downloading CESM2 (replay215)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="installing_replay.html" class="btn btn-neutral float-right" title="Installing the replay" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="CESM Quickstart Guide (replay215)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral" title="Replay Quickstart Guide (replay215)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -305,7 +295,7 @@ higher performance by using MPI-IO. Pnetcdf is enabled by setting the
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2020, U.S. National Science Foundation.
+        &copy; Copyright .
 
     </p>
   </div>
