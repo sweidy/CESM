@@ -1,5 +1,6 @@
 {
     "master": "Upcoming/Beta Version",
     "cesm2.1": "CESM2.1",
-    "cesm2.2": "CESM2.2"
+    "cesm2.2": "CESM2.2",
+    "replay215": "Replay from CESM2.1.5"
 }
