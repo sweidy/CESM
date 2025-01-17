@@ -312,6 +312,13 @@ defined. Send parameters to all processors.</p>
 </dd></dl>
 
 <dl>
+<dt class="sig sig-object f" id="f/replay.F90/replay_init">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">replay.F90/</span></span><span class="sig-name descname"><span class="pre">replay_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/replay.F90/replay_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process windowing parameters if there are any in the namelist and send the updated values
+to all processors.</p>
+</dd></dl>
+
+<dl>
 <dt class="sig sig-object f" id="f/replay.F90/replay_register">
 <em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">replay.F90/</span></span><span class="sig-name descname"><span class="pre">replay_register</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/replay.F90/replay_register" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register _old buffer fields used to store buffer information for model reset.</p>
@@ -339,6 +346,20 @@ model to reset (currently 03z, 09z, 15z, 21z), calls read of reanalysis file for
 Calculates difference between model state and reanalysis. Sets state replay forcing variables
 as that difference. Applies replay forcing as tendency (divided by forcing time, which is
 6 hours in seconds by default) during replay forcing steps.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/replay.F90/replaying_set_profile">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">replay.F90/</span></span><span class="sig-name descname"><span class="pre">replaying_set_profile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/replay.F90/replaying_set_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the spatial regions where the replay is being applied using the windowing parameters for
+the 3D replay varaibles. If no windowing parameters, then the full globe will be replayed.</p>
+</dd></dl>
+
+<dl>
+<dt class="sig sig-object f" id="f/replay.F90/replaying_set_PSprofile">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">replay.F90/</span></span><span class="sig-name descname"><span class="pre">replaying_set_PSprofile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/replay.F90/replaying_set_PSprofile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the spatial regions where the replay is being applied using the windowing parameters for PS.
+If no windowing parameters, then the full globe will be replayed.</p>
 </dd></dl>
 
 <p><strong>Module</strong> <a class="reference internal" href="#f/cam_diagnostics.F90" title="f/cam_diagnostics.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">cam_diagnostics.F90</span></code></a></p>

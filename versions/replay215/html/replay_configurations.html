@@ -116,7 +116,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#available-compsets">Available Compsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#available-resolutions">Available Resolutions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#namelist-parameters">Namelist parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#hopeful-future-configuration-options">Hopeful future configuration options</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Changes to SourceMods for Replay</a></li>
@@ -240,15 +239,173 @@ usually 1 (full forcing) or 0 (no forcing).</p>
 </dd>
 </dl>
 </dd>
+<dt>Replay_coef_U</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>U Coeffcient for replay – usually 1 (full forcing) or 0 (no forcing)
+[0.,1.] fraction of nudging tendency applied.</p>
+<p>Default: 1.</p>
+</dd>
 </dl>
-</section>
-<section id="hopeful-future-configuration-options">
-<h2>Hopeful future configuration options<a class="headerlink" href="#hopeful-future-configuration-options" title="Permalink to this heading">¶</a></h2>
-<ol class="arabic simple">
-<li><p>Windowing for replay like in the nudging toolbox.</p></li>
-<li><p>Allow for setting on and off each variable.</p></li>
-<li><p>Ability to change duration of replay and forcing times.</p></li>
+</dd>
+<dt>Replay_coef_V</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>V Coeffcient for replay – usually 1 (full forcing) or 0 (no forcing)
+[0.,1.] fraction of nudging tendency applied.</p>
+<p>Default: 1.</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_coef_T</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>T Coeffcient for replay – usually 1 (full forcing) or 0 (no forcing)
+[0.,1.] fraction of nudging tendency applied.</p>
+<p>Default: 1.</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_coef_Q</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>Q Coeffcient for replay – usually 1 (full forcing) or 0 (no forcing)
+[0.,1.] fraction of nudging tendency applied.</p>
+<p>Default: 1.</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_coef_PS</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>PS Coeffcient for replay – usually 1 (full forcing) or 0 (no forcing)
+[0.,1.] fraction of nudging tendency applied.</p>
+<p>Default: 1.</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Hwin_lat0</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>LAT0 center of Horizontal Window in degrees [-90.,90.].</p>
+<p>Default: 0</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Hwin_latWidth</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>Width of LAT Window in degrees.</p>
+<p>Default: 9999 (all latitudes)</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Hwin_latDelta</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>Width of transition which controls the steepness of window transition in latitude.
+0. –&gt; Step function</p>
+<p>Default: 1</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Hwin_lon0</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>LON0 center of Horizontal Window in degrees [0.,360.].</p>
+<p>Default: 180</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Hwin_lonWidth</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>Width of LON Window in degrees.</p>
+<p>Default: 9999 (all longitudes)</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Hwin_lonDelta</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><dl class="simple">
+<dt>Width of transition which controls the steepness of window transition in longitude.</dt><dd><ol class="arabic simple" start="0">
+<li><p>–&gt; Step function</p></li>
 </ol>
+</dd>
+</dl>
+<p>Default: none</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Hwin_Invert</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>Invert Horizontal Window Function to its Compliment.
+TRUE  = value=0 inside the specified window, 1 outside (unforced model within window, replay outside)
+FALSE = value=1 inside the specified window, 0 outside (replay within window, unforced model outside)</p>
+<p>Default: FALSE</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Vwin_Hindex</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>HIGH Level Index for Verical Window specified in terms of model level indices.
+(e.g. For a 30 level model, Replay_Vwin_Hindex ~ 30 ).
+For CAM, this is the bound closer to the surface</p>
+<p>Default: Vertical levels + 1</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Vwin_Hdelta</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>Width of transition for HIGH end of Vertical Window.</p>
+<p>Default: 0.001</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Vwin_Lindex</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>LOW Level Index for Verical Window specified in terms of model level indices.
+(e.g. Replay_Vwin_Lindex ~ 0 )
+For CAM, this is the bound closer to the top of atmosphere.</p>
+<p>Default: 0</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Vwin_Ldelta</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>Width of transition for LOW end of Vertical Window.</p>
+<p>Default: 0.001</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Vwin_Invert</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>Invert Vertical Window Function to its Compliment.
+TRUE  = value=0 inside the specified window, 1 outside
+FALSE = value=1 inside the specified window, 0 outside</p>
+<p>Default: FALSE</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Uprof</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>Profile index for U replaying.
+0 == OFF      (No replaying of this variable)
+1 == CONSTANT (Spatially Uniform Replaying)
+2 == HEAVISIDE WINDOW FUNCTION (Use windowing)</p>
+<p>Default: 1</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Vprof</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>Profile index for V replaying.
+0 == OFF      (No replaying of this variable)
+1 == CONSTANT (Spatially Uniform Replaying)
+2 == HEAVISIDE WINDOW FUNCTION (Use windowing)</p>
+<p>Default: 1</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Tprof</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>Profile index for T replaying.
+0 == OFF      (No replaying of this variable)
+1 == CONSTANT (Spatially Uniform Replaying)
+2 == HEAVISIDE WINDOW FUNCTION (Use windowing)</p>
+<p>Default: 1</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_Qprof</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>Profile index for Q replaying.
+0 == OFF      (No replaying of this variable)
+1 == CONSTANT (Spatially Uniform Replaying)
+2 == HEAVISIDE WINDOW FUNCTIO (Use windowing)N</p>
+<p>Default: 1</p>
+</dd>
+</dl>
+</dd>
+<dt>Replay_PSprof</dt><dd><dl>
+<dt>type=”real” category=”replay”, group=”replay_nl”</dt><dd><p>Profile index for PS replaying.
+0 == OFF      (No replaying of this variable)
+1 == CONSTANT (Spatially Uniform Replaying)
+2 == HEAVISIDE WINDOW FUNCTIO (Use windowing)N</p>
+<p>Default: 0</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </section>
 </section>
 
