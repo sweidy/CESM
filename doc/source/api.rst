@@ -8,8 +8,9 @@ Most changes have been labeled with an inline comment "added - sweid" or
 something similar. The :f:mod:`replay.F90` module is where the core of the replay occurs, and 
 is likely the only file needed to understand how the replay works. 
 
-CIME
+CIME 
 ----
+`CIME github <https://github.com/sweidy/cime>`_
 
 **Module** :f:mod:`ESMF_ClockMod.F90`
 
@@ -57,6 +58,7 @@ Source path: cime/src/drivers/mct/shr/
 
 CAM
 ---
+`CAM github <https://github.com/sweidy/CAM>`_
 
 **Module** :f:mod:`cam_comp.F90`
 
@@ -313,6 +315,7 @@ Source path: components/cam/bld/namelist_files/namelist_definition.xml
 
 CICE
 ----
+`CICE github <https://github.com/sweidy/CESM_CICE5>`_
 
 **Module** :f:mod:`CICE_RunMod.F90`
 
@@ -383,6 +386,7 @@ Source path: components/cice/src/source/
 
 CLM
 ---
+`CLM github <https://github.com/sweidy/CTSM>`_
 
 **Module** :f:mod:`various`
 
