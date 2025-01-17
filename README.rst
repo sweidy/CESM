@@ -2,7 +2,7 @@
  Replay to reanalysis in CESM
 ================================
 
-This document describes how to use the replay functionality with CESM. It is assumed the user is already familiar with how to run CESM on their machine. Documentation from the original model version can be found in the README_CESM.rst file. 
+This document describes how to use the replay functionality with CESM. It is assumed the user is already familiar with how to run CESM on their machine. More detailed documentation and a description of code changes can be found in the `Replay Users Guide <https://sweidy.github.io/CESM/versions/replay215/html/index.html>`_. Documentation from the original model version can be found in the README_CESM.rst file. 
 
 .. sectnum::
 

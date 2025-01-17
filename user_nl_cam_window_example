@@ -1,0 +1,35 @@
+! Users should add all user specific namelist changes below in the form of 
+! namelist_var = new_namelist_value 
+
+nhtfrq = 0,-24
+mfilt = 1,1
+ndens = 1,1
+
+avgflag_pertape = 'A','A'
+
+fincl2 = 'QDIFF','VDIFF','UDIFF','SDIFF','U850','U200','PRECC','PRECL','FLUT','FLNT','Z500'
+
+Replay_Model = .true.
+Replay_Path = '/glade/campaign/cgd/amp/wchapman/Nudging_ERA5/fv_L32_ncl/'
+Replay_File_Template = 'ERA5_fv09.cam2.i.%y-%m-%d-%s.nc' 
+Replay_Beg_Year = 2000
+Replay_Hwin_lat0    =0
+Replay_Hwin_latWidth=40
+Replay_Hwin_latDelta=2
+Replay_Hwin_lon0    =180.
+Replay_Hwin_lonWidth=35.   
+Replay_Hwin_lonDelta=2
+Replay_Hwin_Invert  =.false.
+Replay_Vwin_Hindex  =24.
+Replay_Vwin_Hdelta  =0.1
+Replay_Vwin_Lindex  =0.
+Replay_Vwin_Ldelta  =0.1
+Replay_Vwin_Invert  =.false.
+Replay_Uprof  =2
+Replay_Vprof  =2
+Replay_Tprof  =2
+Replay_Qprof  =2
+Replay_coef_U  =1.0
+Replay_coef_V  =1.0
+Replay_coef_T  =1.0
+Replay_coef_Q  =1.0
