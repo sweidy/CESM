@@ -137,7 +137,12 @@ Source path: components/cam/src/physics/cam/
 .. f:subroutine:: replay_readnl 
 
     Read replay namelist parameters. End job and throw error if namelist parameters not properly
-    defined. Send parameters to all processors. 
+    defined. Send parameters to all processors.
+
+.. f:subroutine:: replay_init
+
+    Process windowing parameters if there are any in the namelist and send the updated values
+    to all processors.   
 
 .. f:subroutine:: replay_register 
 
@@ -159,7 +164,17 @@ Source path: components/cam/src/physics/cam/
     model to reset (currently 03z, 09z, 15z, 21z), calls read of reanalysis file for current time. 
     Calculates difference between model state and reanalysis. Sets state replay forcing variables 
     as that difference. Applies replay forcing as tendency (divided by forcing time, which is
-    6 hours in seconds by default) during replay forcing steps. 
+    6 hours in seconds by default) during replay forcing steps.
+
+.. f:subroutine:: replaying_set_profile 
+
+    Set the spatial regions where the replay is being applied using the windowing parameters for
+    the 3D replay varaibles. If no windowing parameters, then the full globe will be replayed.
+
+.. f:subroutine:: replaying_set_PSprofile 
+
+    Set the spatial regions where the replay is being applied using the windowing parameters for PS. 
+    If no windowing parameters, then the full globe will be replayed.  
 
 **Module** :f:mod:`cam_diagnostics.F90`
 
