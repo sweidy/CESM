@@ -1,8 +1,8 @@
 .. _installing:
 
-=============================
+=====================
 Installing the replay
-=============================
+=====================
 
 The replay version of CESM requires modifications to multiple components of the model 
 (i.e. CAM, CICE, CLM, CIME). A detailed description of all SourceMod changes are in the 

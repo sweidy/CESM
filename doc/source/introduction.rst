@@ -1,8 +1,8 @@
 .. _introduction:
 
-================================
+=============
  Introduction
-================================
+=============
 
 This guide describes how to use the replay functionality with CESM. 
 It is assumed the user is already familiar with how to run CESM on their machine. 
@@ -10,7 +10,7 @@ Documentation from the original model version can be found in the
 `CESM Quickstart Guide <https://escomp.github.io/CESM/versions/cesm2.1/html/index.html>`_
 
 What is the replay?
-=================
+===================
 
 The replay is a version of the Incremental Analysis Update (IAU) used for 
 performing data assimilation, described in Bloom et al., 1996 and relating to 
@@ -22,7 +22,7 @@ model performance (see Schubert et al., 2019), among other use cases.
 
 The replay is similar to nudging, but is less sensitive to nudging parameters 
 and instabilities (Bloom et al., 1996). The difference is in the timing of the 
-'forcing towards the reanalysis. In the replay, the model runs forward 3 hours 
+forcing towards the reanalysis. In the replay, the model runs forward 3 hours 
 normally, with no forcing applied. Then, the difference between the model state 
 and the reanalysis is measured (here any or all of U,V,T, and Q can be used) 
 and saved in the model output. The model then backs up 3 hours to exactly where 
@@ -102,5 +102,3 @@ References
       Takacs, L. L., Suárez, M. J., & Todling, R. (2018). The Stability
       of Incremental Analysis Update. *Monthly Weather Review*,
       *146*\ (10), 3259–3275. https://doi.org/10.1175/MWR-D-18-0117.1
-
-.. _CIME: http://esmci.github.io/cime
