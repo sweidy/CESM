@@ -220,6 +220,16 @@ clock alarms so the model doesn’t crash when backup occurs.</p>
 <dd><p>Reset time and date to restart time at correct time.</p>
 </dd></dl>
 
+<p><strong>Module</strong> <a class="reference internal" href="#f/seq_flux_mct.F90" title="f/seq_flux_mct.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">seq_flux_mct.F90</span></code></a></p>
+<p>Source path: cime/src/drivers/mct/main/</p>
+<span class="target" id="f/seq_flux_mct.F90"></span><dl>
+<dt class="sig sig-object f" id="f/seq_flux_mct.F90/seq_flux_ocnalb_mct">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">seq_flux_mct.F90/</span></span><span class="sig-name descname"><span class="pre">seq_flux_ocnalb_mct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/seq_flux_mct.F90/seq_flux_ocnalb_mct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save ocean albedo variables into “_old” at timestep the model is supposed to back up to
+(currently 00z, 06z, 12z, 18z). Switch ocean albedo variables back to _old version when
+time for model to back up (currently 03z, 09z, 15z, 21z). Used in prescribed SST cases.</p>
+</dd></dl>
+
 <p><strong>Module</strong> <a class="reference internal" href="#f/seq_timemgr_mod.F90" title="f/seq_timemgr_mod.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">seq_timemgr_mod.F90</span></code></a></p>
 <p>Source path: cime/src/drivers/mct/shr/</p>
 <span class="target" id="f/seq_timemgr_mod.F90"></span><dl>
@@ -232,6 +242,14 @@ clock alarms so the model doesn’t crash when backup occurs.</p>
 <dt class="sig sig-object f" id="f/seq_timemgr_mod.F90/seq_timemgr_EClockInit">
 <em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">seq_timemgr_mod.F90/</span></span><span class="sig-name descname"><span class="pre">seq_timemgr_EClockInit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/seq_timemgr_mod.F90/seq_timemgr_EClockInit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adjust clock time for restart.</p>
+</dd></dl>
+
+<p><strong>Module</strong> <a class="reference internal" href="#f/seq_flds_mod.F90" title="f/seq_flds_mod.F90"><code class="xref f f-mod docutils literal notranslate"><span class="pre">seq_flds_mod.F90</span></code></a></p>
+<p>Source path: cime/src/drivers/mct/shr/</p>
+<span class="target" id="f/seq_flds_mod.F90"></span><dl>
+<dt class="sig sig-object f" id="f/seq_flds_mod.F90/seq_flds_set">
+<em class="property"><span class="pre">subroutine</span>&#160; </em><span class="sig-prename descclassname"><span class="pre">seq_flds_mod.F90/</span></span><span class="sig-name descname"><span class="pre">seq_flds_set</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#f/seq_flds_mod.F90/seq_flds_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define _old variables for ocean albedo variables used in prescribed SST cases.</p>
 </dd></dl>
 
 </section>

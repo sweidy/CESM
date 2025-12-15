@@ -42,6 +42,18 @@ Source path: cime/src/drivers/mct/main/
     
     Reset time and date to restart time at correct time.
 
+**Module** :f:mod:`seq_flux_mct.F90`
+
+Source path: cime/src/drivers/mct/main/
+
+.. f:module:: seq_flux_mct.F90
+
+.. f:subroutine:: seq_flux_ocnalb_mct
+    
+    Save ocean albedo variables into "_old" at timestep the model is supposed to back up to
+    (currently 00z, 06z, 12z, 18z). Switch ocean albedo variables back to _old version when
+    time for model to back up (currently 03z, 09z, 15z, 21z). Used in prescribed SST cases.
+
 **Module** :f:mod:`seq_timemgr_mod.F90`
 
 Source path: cime/src/drivers/mct/shr/
@@ -55,6 +67,16 @@ Source path: cime/src/drivers/mct/shr/
 .. f:subroutine:: seq_timemgr_EClockInit
 
     Adjust clock time for restart.
+
+**Module** :f:mod:`seq_flds_mod.F90`
+
+Source path: cime/src/drivers/mct/shr/
+
+.. f:module:: seq_flds_mod.F90
+
+.. f:subroutine:: seq_flds_set
+    
+    Define _old variables for ocean albedo variables used in prescribed SST cases.
 
 CAM
 ---
